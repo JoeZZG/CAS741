@@ -2,12 +2,13 @@
 
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{hyperref}
 
 \title{Problem Statement and Goals\\\progname}
 
-\author{\authname}
+\author{Zhuo Zhang}
 
-\date{}
+\date{2026-01-16}
 
 \input{../Comments.text}
 \input{../Common.text}
@@ -22,72 +23,51 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-Date1 & Name(s) & Description of changes\\
-Date2 & Name(s) & Description of changes\\
-... & ... & ...\\
+2026-01-16 & Zhuo Zhang & Initial draft\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \section{Problem Statement}
 
-\wss{You should check your problem statement with the
-\href{https://smiths.github.io/capTemplate/Checklists/ProbState-Checklist.pdf}
-{problem statement checklist}}. 
-
-\wss{You can change the section headings, as long as you include the required
-information.}
-
 \subsection{Problem}
+
+In electromagnetism, charged particles undergo deflection circular motion and
+velocity selection under electric and magnetic fields. Analyzing these behaviors
+can help understanding phenomena such as velocity selectors, Cathode Ray
+Tube deflection and other basic principles of mass separation. The problem is to
+provide a computational tool that predicts trajectories and deflection of charged
+particle when it passes through uniform electric or magnetic field regions under different sets of configuration and parameter. The importance
+of this problem is from that the motion is described by a system of ordinary
+differential equations (ODEs).
+
 
 \subsection{Inputs and Outputs}
 
-\wss{Characterize the problem in terms of ``high level'' inputs and outputs.  
-Use abstraction so that you can avoid details.}
+The inputs are particle properties, field specification, geometry of the experiment, and termination condition of the experiment. The outputs are representation of particles' trajectory and deflection.
 
 \subsection{Stakeholders}
+\begin{itemize}
+\item Primary use stakeholders: instructors or students who want to confirm or analyze motions of charged-particle in different conditions of fields.
+\item Project stakeholders: the Drasil maintainers and course instructors who will check the artifacts, traceability and quality of the document.
+\item Secondary stakeholders: future CAS741 students who wish to reuse, refer or extend the case study.
+\end{itemize}
 
 \subsection{Environment}
 
-\wss{Hardware and Software Environment for the users.  The developer environment
-is summarized as part of the developer plan.}
+This software runs on personal computer with Ubuntu 22.04 LTS. User interacts via command line. Inputs are provided through a text-based configuration and outputs are given by portable and standard formats in CSV. The documentation and generated artifacts are under Drasil workflow.
 
 \section{Goals}
+\begin{itemize}
+\item This software will compute motion of charged-particle by modeling dynamics. 
+\item This software will support electric-field-only, magnetic-field-only, and crossed-field configuration regions.
+\item This software will produce impact point, flight time, trajectory and deflection in a readable format.
+\end{itemize}
 
 \section{Stretch Goals}
-
-\wss{Goals you hope to get to, but not necessary.  They are also helpful if the
-scope of the original project needs to be expanded.}
-
-\section{Extras}
-
-\wss{For CAS 741: State whether the project is a research project. This
-designation, with the approval (or request) of the instructor, can be modified
-over the course of the term.}
-
-\wss{For SE Capstone: List your extras.  Potential extras include usability
-testing, code walkthroughs, user documentation, formal proof, GenderMag
-personas, Design Thinking, etc.  (The full list is on the course outline and in
-Lecture 02.) Normally the number of extras will be two.  Approval of the extras
-will be part of the discussion with the instructor for approving the project.
-The extras, with the approval (or request) of the instructor, can be modified
-over the course of the term.}
-
-\newpage{}
-
-\section*{Appendix --- Reflection}
-
-\wss{Not required for CAS 741}
-
-\input{../Reflection.text}
-
-\begin{enumerate}
-    \item What went well while writing this deliverable? 
-    \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-    \item How did you and your team adjust the scope of your goals to ensure
-    they are suitable for a Capstone project (not overly ambitious but also of
-    appropriate complexity for a senior design project)?
-\end{enumerate}  
+\begin{itemize}
+\item This software will solve for unknown parameter given a target detector location.
+\item This software will add error estimation to improve accuracy across different parameters.
+\end{itemize}
 
 \end{document}
