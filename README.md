@@ -4,7 +4,7 @@ Developer Names: Zhuo Zhang
 
 Date of project start: January 16, 2026
 
-This project is ...
+This project is Charged Particle Trajectory Simulator
 
 The folders and files for this project are as follows:
 
