@@ -1,8 +1,8 @@
 # Project Name
 
-Developer Names:
+Developer Names: Zhuo Zhang
 
-Date of project start:
+Date of project start: January 16, 2026
 
 This project is ...
 
