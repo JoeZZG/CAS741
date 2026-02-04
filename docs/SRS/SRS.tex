@@ -128,10 +128,10 @@
 
 \begin{document}
 
-\title{Software Requirements Specification for \progname: subtitle describing software} 
-\author{\authname}
-\date{\today}
-	
+\title{Software Requirements Specification for Charged Particle Trajectory Simulator}
+\author{Zhuo Zhang}
+\date{January 23, 2026}
+
 \maketitle
 
 ~\newpage
@@ -147,17 +147,11 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+January 23, 2026 & 1.0 & Initial release\\
 \bottomrule
 \end{tabularx}
 
-~\\
-\plt{This template is intended for use by CAS 741.  For CAS 741 the template
-should be used exactly as given, except the Reflection Appendix can be deleted.
-For the capstone course it is a source of ideas, but shouldn't be followed
-exactly.  The exception is the reflection appendix.  All capstone SRS documents
-should have a reflection appendix.}
+
 
 ~\newpage
 
@@ -168,354 +162,169 @@ This section records information for easy reference.
 \subsection{Table of Units}
 
 Throughout this document SI (Syst\`{e}me International d'Unit\'{e}s) is employed
-as the unit system.  In addition to the basic units, several derived units are
-used as described below.  For each unit, the symbol is given followed by a
+as the unit system. In addition to the basic units, several derived units are
+used as described below. For each unit, the symbol is given followed by a
 description of the unit and the SI name.
 ~\newline
 
 \renewcommand{\arraystretch}{1.2}
-%\begin{table}[ht]
-  \noindent \begin{tabular}{l l l} 
-    \toprule		
-    \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
-    \midrule 
-    \si{\metre} & length & metre\\
-    \si{\kilogram} & mass	& kilogram\\
-    \si{\second} & time & second\\
-    \si{\celsius} & temperature & centigrade\\
-    \si{\joule} & energy & joule\\
-    \si{\watt} & power & watt (W = \si{\joule\per\second})\\
-    \bottomrule
-  \end{tabular}
-  %	\caption{Provide a caption}
-%\end{table}
-
-\plt{Only include the units that your SRS actually uses.}
-
-\plt{Derived units, like newtons, pascal, etc, should show their derivation
-    (the units they are derived from) if their constituent units are in the
-    table of units (that is, if the units they are derived from are used in the
-    document).  For instance, the derivation of pascals as
-    $\si{\pascal}=\si{\newton\per\square\meter}$ is shown if newtons and m are
-    both in the table.  The derivations of newtons would not be shown if kg and
-    s are not both in the table.}
-
-\plt{The symbol for units named after people use capital letters, but the name
-  of the unit itself uses lower case.  For instance, pascals use the symbol Pa,
-  watts use the symbol W, teslas use the symbol T, newtons use the symbol N,
-  etc.  The one exception to this is degree Celsius.  Details on writing metric
-  units can be found on the 
-  \href{https://www.nist.gov/pml/weights-and-measures/writing-metric-units}
-  {NIST} web-page.}
+\noindent \begin{tabular}{l l l}
+  \toprule
+  \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
+  \midrule
+  \unit{\metre}   & length  & metre\\
+  \unit{\kilogram}& mass    & kilogram\\
+  \unit{\second}  & time    & second\\
+  \unit{\ampere}  & electric current & ampere\\
+  \unit{\coulomb} & electric charge & coulomb (C = \unit{\ampere\second})\\
+  \unit{\newton}  & force   & newton (N = \unit{\kilogram\metre\per\second\squared})\\
+  \unit{\joule}   & energy  & joule (J = \unit{\newton\metre})\\
+  \unit{\tesla}   & magnetic flux density & tesla (T = \unit{\newton\per\ampere\metre})\\
+  \unit{\volt}    & electric potential & volt (V = \unit{\joule\per\coulomb})\\
+  \bottomrule
+\end{tabular}
 
 \subsection{Table of Symbols}
 
 The table that follows summarizes the symbols used in this document along with
-their units.  The choice of symbols was made to be consistent with the heat
-transfer literature and with existing documentation for solar water heating
-systems.  The symbols are listed in alphabetical order.
+their units. The symbols are listed in alphabetical order.
 
 \renewcommand{\arraystretch}{1.2}
-%\noindent \begin{tabularx}{1.0\textwidth}{l l X}
 \noindent \begin{longtable*}{l l p{12cm}} \toprule
 \textbf{symbol} & \textbf{unit} & \textbf{description}\\
-\midrule 
-$A_C$ & \si[per-mode=symbol] {\square\metre} & coil surface area
-\\
-$A_\text{in}$ & \si[per-mode=symbol] {\square\metre} & surface area over which
-heat is transferred in
-\\ 
+\midrule
+$\mathbf{B}$ & \unit[per-mode=symbol]{\tesla} & magnetic flux density (magnetic field)\\
+$\mathbf{E}$ & \unit[per-mode=symbol]{\newton\per\coulomb} & electric field\\
+$\mathbf{F}$ & \unit[per-mode=symbol]{\newton} & force acting on the particle\\
+$K$          & \unit[per-mode=symbol]{\joule} & kinetic energy of the particle\\
+$L$          & \unit[per-mode=symbol]{\metre} & detector line location along the reference axis (e.g., $x=L$)\\
+$m$          & \unit[per-mode=symbol]{\kilogram} & particle mass\\
+$\mathbf{p}$ & \unit[per-mode=symbol]{\kilogram\metre\per\second} & linear momentum of the particle ($\mathbf{p}=m\mathbf{v}$)\\
+$q$          & \unit[per-mode=symbol]{\coulomb} & particle charge\\
+$r$          & \unit[per-mode=symbol]{\metre} & trajectory curvature radius (scenario-dependent)\\
+$t$          & \unit[per-mode=symbol]{\second} & time\\
+$a$          & \unit[per-mode=symbol]{\metre\per\second\squared} & acceleration\\
+$t_{\text{hit}}$ & \unit[per-mode=symbol]{\second} & time at which the particle reaches the detector line\\
+$\mathbf{v}$ & \unit[per-mode=symbol]{\metre\per\second} & particle velocity\\
+$\mathbf{x}$ & \unit[per-mode=symbol]{\metre} & particle position\\
+$\mathbf{x}_0$ & \unit[per-mode=symbol]{\metre} & initial position\\
+$\mathbf{v}_0$ & \unit[per-mode=symbol]{\metre\per\second} & initial velocity\\
+$\mathbf{x}_{\text{hit}}$ & \unit[per-mode=symbol]{\metre} & impact position on the detector line\\
 \bottomrule
 \end{longtable*}
-\plt{Use your problems actual symbols.  The si package is a good idea to use for
-  units.}
 
 \subsection{Abbreviations and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
+\begin{tabular}{l l}
+  \toprule
   \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  A & Assumption\\
-  DD & Data Definition\\
-  GD & General Definition\\
-  GS & Goal Statement\\
-  IM & Instance Model\\
-  LC & Likely Change\\
-  PS & Physical System Description\\
-  R & Requirement\\
+  \midrule
+  A   & Assumption\\
+  CLI & Command-Line Interface\\
+  CSV & Comma-Separated Values\\
+  DD  & Data Definition\\
+  EM  & Electromagnetism\\
+  GD  & General Definition\\
+  GS  & Goal Statement\\
+  IM  & Instance Model\\
+  IVP & Initial Value Problem\\
+  LC  & Likely Change\\
+  ODE & Ordinary Differential Equation\\
+  PS  & Physical System Description\\
+  R   & Requirement\\
   SRS & Software Requirements Specification\\
-  \progname{} & \plt{put an expanded version of your program name here (as appropriate)}\\
-  TM & Theoretical Model\\
+  TM  & Theoretical Model\\
   \bottomrule
 \end{tabular}\\
 
-\plt{Add any other abbreviations or acronyms that you add}
-
 \subsection{Mathematical Notation}
 
-\plt{This section is optional, but should be included for projects that make use
-  of notation to convey mathematical information.  For instance, if typographic
-  conventions (like bold face font) are used to distinguish matrices, this
-  should be stated here.  If symbols are used to show mathematical operations,
-  these should be summarized here.  In some cases the easiest way to summarize
-  the notation is to point to a text or other source that explains the
-  notation.}
-
-\plt{This section was added to the template because some students use very
-  domain specific notation.  This notation will not be readily understandable to
-  people outside of your domain.  It should be explained.}
+\begin{itemize}
+  \item Vectors are denoted in bold (e.g., $\mathbf{x}$, $\mathbf{v}$, $\mathbf{E}$, $\mathbf{B}$).
+  \item A dot over a quantity denotes a time derivative, e.g., $\dot{\mathbf{x}} = d\mathbf{x}/dt$.
+  \item The symbol $\times$ denotes the vector cross product.
+  \item The notation $\|\mathbf{u}\|$ denotes the Euclidean norm (magnitude) of a vector $\mathbf{u}$.
+  \item Subscript $0$ denotes an initial condition (e.g., $\mathbf{x}_0$, $\mathbf{v}_0$).
+  \item Subscript \textit{hit} denotes the value at detector-plane impact (e.g., $\mathbf{x}_{\text{hit}}$, $t_{\text{hit}}$).
+\end{itemize}
 
 \newpage
 
 \pagenumbering{arabic}
 
-\plt{This SRS template is based on \citet{SmithAndLai2005, SmithEtAl2007,
-  SmithAndKoothoor2016}.  It will get you started.  You should not modify the
-  section headings, without first discussing the change with the course
-  instructor.  Modification means you are not following the template, which
-  loses some of the advantage of a template, especially standardization.
-  Although the bits shown below do not include type information, you may need to
-  add this information for your problem.  If you are unsure, please can ask the
-  instructor.}
-
-\plt{Feel free to change the appearance of the report by modifying the LaTeX
-  commands.}
-
-\plt{This template document assumes that a single program is being documented.
-  If you are documenting a family of models, you should start with a commonality
-  analysis.  A separate template is provided for this.  For program
-  families you should look at \cite{Smith2006, SmithMcCutchanAndCarette2017}.
-  Single family member programs are often programs based on a single physical
-  model.  General purpose tools are usually documented as a family.  Families of
-  physical models also come up.}
-
-\plt{The SRS is not generally written, or read, sequentially.  The SRS is a
-  reference document.  It is generally read in an ad hoc order, as the need
-  arises.  For writing an SRS, and for reading one for the first time, the
-  suggested order of sections is:
-\begin{itemize}
-\item Goal Statement
-\item Instance Models
-\item Requirements
-\item Introduction
-\item Specific System Description
-\end{itemize}
-}
-
-\plt{Guiding principles for the SRS document:
-\begin{itemize}
-\item Do not repeat the same information at the same abstraction level.  If
-  information is repeated, the repetition should be at a different abstraction
-  level.  For instance, there will be overlap between the scope section and the
-  assumptions, but the scope section will not go into as much detail as the
-  assumptions section.
-\end{itemize}
-}
-
-\plt{The template description comments should be disabled before submitting this
-  document for grading.}
-
-\plt{You can borrow any wording from the text given in the template.  It is part
-  of the template, and not considered an instance of academic integrity.  Of
-  course, you need to cite the source of the template.}
-
-\plt{When the documentation is done, it should be possible to trace back to the
-  source of every piece of information.  Some information will come from
-  external sources, like terminology.  Other information will be derived, like
-  General Definitions.}
-
-\plt{An SRS document should have the following qualities: unambiguous,
-  consistent, complete, validatable, abstract and traceable.}
-
-\plt{The overall goal of the SRS is that someone that meets the Characteristics
-  of the Intended Reader (Section~\ref{sec_IntendedReader}) can learn,
-  understand and verify the captured domain knowledge.  They should not have to
-  trust the authors of the SRS on any statements.  They should be able to
-  independently verify/derive every statement made.}
-
-\section{Introduction}
-
-\plt{The introduction section is written to introduce the problem.  It starts
-  general and focuses on the problem domain. The general advice is to start with
-a paragraph or two that describes the problem, followed by a ``roadmap''
-paragraph.  A roadmap orients the reader by telling them what sub-sections to
-expect in the Introduction section.}
-
-\subsection{Purpose of Document}
-
-\plt{This section summarizes the purpose of the SRS document.  It does not focus
-  on the problem itself.  The problem is described in the ``Problem
-  Description'' section (Section~\ref{Sec_pd}).  The purpose is for the document
-  in the context of the project itself, not in the context of this course.
-  Although the ``purpose'' of the document is to get a grade, you should not
-  mention this.  Instead, ``fake it'' as if this is a real project.  The purpose
-  section will be similar between projects.  The purpose of the document is the
-  purpose of the SRS, including communication, planning for the design stage,
-  etc.}
-
-\subsection{Scope of Requirements} 
-
-\plt{Modelling the real world requires simplification.  The full complexity of
-  the actual physics, chemistry, biology is too much for existing models, and
-  for existing computational solution techniques.  Rather than say what is in
-  the scope, it is usually easier to say what is not.  You can think of it as
-  the scope is initially everything, and then it is constrained to create the
-  actual scope.  For instance, the problem can be restricted to 2 dimensions, or
-  it can ignore the effect of temperature (or pressure) on the material
-  properties, etc.}  
-
-\plt{The scope section is related to the assumptions section
-  (Section~\ref{sec_assumpt}).  However, the scope and the assumptions are not
-  at the same level of abstraction.  The scope is at a high level.  The focus is
-  on the ``big picture'' assumptions.  The assumptions section lists, and
-  describes, all of the assumptions.}
-
-\plt{The scope section is relevant for later determining typical values of inputs. The scope should make it clear what inputs are reasonable to expect. This is a distinction between scope and context (context is a later section).  Scope affects the inputs while context affects how the software will be used.}
-
-\subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
-
-\plt{This section summarizes the skills and knowledge of the readers of the
-  SRS.  It does NOT have the same purpose as the ``User Characteristics''
-  section (Section~\ref{SecUserCharacteristics}).  The intended readers are the
-  people that will read, review and maintain the SRS.  They are the people that
-  will conceivably design the software that is intended to meet the
-  requirements.  The user, on the other hand, is the person that uses the
-  software that is built.  They may never read this SRS document.  Of course,
-  the same person could be a ``user'' and an ``intended reader.''}
-
-\plt{The intended reader characteristics should be written as unambiguously and
-  as specifically as possible.  Rather than say, the user should have an
-  understanding of physics, say what kind of physics and at what level.  For
-  instance, is high school physics adequate, or should the reader have had a
-  graduate course on advanced quantum mechanics?}
-
-\subsection{Organization of Document}
-
-\plt{This section provides a roadmap of the SRS document.  It will help the
-  reader orient themselves.  It will provide direction that will help them
-  select which sections they want to read, and in what order.  This section will
-  be similar between project.}
-
-\plt{Include a reference to the template (\citet{SmithAndLai2005, SmithEtAl2007,
-  SmithAndKoothoor2016}) you are using in the documentation in the Organization of
-  the Document section.}
   
 
 \section{General System Description}
 
-This section provides general information about the system.  It identifies the
+This section provides general information about the system. It identifies the
 interfaces between the system and its environment, describes the user
-characteristics and lists the system constraints.  \plt{This text can likely be
-  borrowed verbatim.}
-
-\plt{The purpose of this section is to provide general information about the
-  system so the specific requirements in the next section will be easier to
-  understand. The general system description section is designed to be
-  changeable independent of changes to the functional requirements documented in
-  the specific system description. The general system description provides a
-  context for a family of related models.  The general description can stay the
-  same, while specific details are changed between family members.}
+characteristics and lists the system constraints.
 
 \subsection{System Context}
 
-\plt{Your system context will include a figure that shows the abstract view of
-  the software.  Often in a scientific context, the program can be viewed
-  abstractly following the design pattern of Inputs $\rightarrow$ Calculations
-  $\rightarrow$ Outputs.  The system context will therefore often follow this
-  pattern.  The user provides inputs, the system does the calculations, and then
-  provides the outputs to the user.  The figure should not show all of the
-  inputs, just an abstract view of the main categories of inputs (like material
-  properties, geometry, etc.).  Likewise, the outputs should be presented from
-  an abstract point of view.  In some cases the diagram will show other external
-  entities, besides the user.  For instance, when the software product is a
-  library, the user will be another software program, not an actual end user.
-  If there are system constraints that the software must work with external
-  libraries, these libraries can also be shown on the System Context diagram.
-  They should only be named with a specific library name if this is required by
-  the system constraint.}
+Figure~\ref{Fig_SystemContext} shows the system context. A circle represents an
+entity external to the software, the user and the input/output files in this
+case. A rectangle represents the software system itself (\progname{}). Arrows
+are used to show the data flow between the system and its environment.
 
 \begin{figure}[h!]
 \begin{center}
- \includegraphics[width=0.6\textwidth]{SystemContextFigure}
+ \IfFileExists{diagram.jpg}{%
+  \includegraphics[width=0.9\textwidth]{diagram.jpg}%
+}{%
+  \fbox{Missing figure file diagram.jpg}%
+}
 \caption{System Context}
-\label{Fig_SystemContext} 
+\label{Fig_SystemContext}
 \end{center}
 \end{figure}
 
-\plt{For each of the entities in the system context diagram its responsibilities
-  should be listed.  Whenever possible the system should check for data quality,
-  but for some cases the user will need to assume that responsibility.  The list
-  of responsibilities should be about the inputs and outputs only, and they
-  should be abstract.  Details should not be presented here.  However, the
-  information should not be so abstract as to just say ``inputs'' and
-  ``outputs''.  A summarizing phrase can be used to characterize the inputs.
-  For instance, saying ``material properties'' provides some information, but it
-  stays away from the detail of listing every required properties.}
+The interaction between the product and the user is through a text-based
+interface. The
+responsibilities of the user and the system are as follows:
 
 \begin{itemize}
 \item User Responsibilities:
 \begin{itemize}
-\item 
-\end{itemize}
-\item \progname{} Responsibilities:
-\begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
-\end{itemize}
+\item Provide initial conditions of the physical state of the motion and the input data
+  related to the projectile, ensuring no errors in the data entry.
+\item Ensure that consistent units are used for input variables.
+\item Ensure required software assumptions are appropriate for any particular problem input
+  to the software.
 \end{itemize}
 
-\plt{Identify in what context the software will typically be used.  Is it for
-exploration? education? engineering work? scientific work?. Identify whether it
-will be used for mission-critical or safety-critical applications.} \plt{This
-additional context information is needed to determine how much effort should be
-devoted to the rationale section.  If the application is safety-critical, the
-bar is higher.  This is currently less structured, but analogous to, the idea to
-the Automotive Safety Integrity Levels (ASILs) that McSCert uses in their
-automotive hazard analyses.}
+\item \progname{} Responsibilities:
+\begin{itemize}
+\item Detect data type mismatch, such as a string of characters input instead of a
+  floating point number.
+\item Determine if the inputs satisfy the required physical and software constraints.
+\item Calculate the required outputs.
+\end{itemize}
+\end{itemize}
 
 \subsection{User Characteristics} \label{SecUserCharacteristics}
 
-\plt{This section summarizes the knowledge/skills expected of the user.
-  Measuring usability, which is often a required non-function requirement,
-  requires knowledge of a typical user.  As mentioned above, the user is a
-  different role from the ``intended reader,'' as given in
-  Section~\ref{sec_IntendedReader}.  As in Section~\ref{sec_IntendedReader}, the
-  user characteristics should be specific an unambiguous.  For instance, ``The
-  end user of \progname{} should have an understanding of undergraduate Level 1
-  Calculus and Physics.''}
+The end user of \progname{} should have an understanding of high school physics and high school
+calculus.
 
 \subsection{System Constraints}
 
-\plt{System constraints differ from other type of requirements because they
-  limit the developers' options in the system design and they identify how the
-  eventual system must fit into the world. This is the only place in the SRS
-  where design decisions can be specified.  That is, the quality requirement for
-  abstraction is relaxed here.  However, system constraints should only be
-  included if they are truly required.}
+There are no system constraints.
+
 
 \section{Specific System Description}
 
 This section first presents the problem description, which gives a high-level
 view of the problem to be solved.  This is followed by the solution characteristics
 specification, which presents the assumptions, theories, definitions and finally
-the instance models.  \plt{Add any project specific details that are relevant
-  for the section overview.}
+the instance models.
 
 \subsection{Problem Description} \label{Sec_pd}
 
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-The description here should be in the problem space, not the solution space.}
+\progname{} is intended to predict the projectile of charged particle in magnetic field.
 
 \subsubsection{Terminology and  Definitions}
-
-\plt{This section is expressed in words, not with equations.  It provide the
-  meaning of the different words and phrases used in the domain of the problem.
-The terminology is used to introduce concepts from the world outside of the
-mathematical model  The terminology provides a real world connection to give the
-mathematical model meaning.}
 
 This subsection provides a list of terms that are used in the subsequent
 sections and their meaning, with the purpose of reducing ambiguity and making it
@@ -523,121 +332,136 @@ easier to correctly understand the requirements:
 
 \begin{itemize}
 
-\item 
+\item Charged particle: A particle that has a non-zero electric charge and can
+interact with electric and magnetic fields.
+
+\item Electric field: A physical field that exerts an electric force on charged
+particles.
+
+\item Magnetic field: A physical field that exerts a magnetic force on moving
+charged particles.
+
+\item Lorentz force: The force on a charged particle due to electric and
+magnetic fields.
+
+\item Trajectory: The path traced by a particle over time.
+
+\item Field region: A spatial region in which the electric field and magnetic
+field are specified (typically treated as uniform within the region).
+
+\item Detector line: A line at a specified location where the particle impact
+position is recorded.
+
+\item Velocity selector: A configuration of crossed electric and magnetic fields
+that allows only particles with a particular velocity to pass through without
+deflection.
+
+\item Projectile: The object to be launched at the target.
+
+\item Cartesian coordinate system: A coordinate system that specifies each point uniquely in a plane by a set of numerical coordinates, which are the signed distances to the point from two fixed perpendicular oriented lines, measured in the same unit of length (from cartesianWiki).
 
 \end{itemize}
 
 \subsubsection{Physical System Description} \label{sec_phySystDescrip}
 
-\plt{The purpose of this section is to clearly and unambiguously state the
-  physical system that is to be modelled. Effective problem solving requires a
-  logical and organized approach. The statements on the physical system to be
-  studied should cover enough information to solve the problem. The physical
-  description involves element identification, where elements are defined as
-  independent and separable items of the physical system. Some example elements
-  include acceleration due to gravity, the mass of an object, and the size and
-  shape of an object. Each element should be identified and labelled, with their
-  interesting properties specified clearly. The physical description can also
-  include interactions of the elements, such as the following: i) the
-  interactions between the elements and their physical environment; ii) the
-  interactions between elements; and, iii) the initial or boundary conditions.}
-
-\plt{The elements of the physical system do not have to correspond to an actual
-physical entity.  They can be conceptual.  This is particularly important when
-the documentation is for a numerical method. }
-
-The physical system of \progname{}, as shown in Figure~?,
-includes the following elements:
+The physical system of \progname{}, as shown in
+Figure~\ref{Fig_PhysicalSystem}, includes the following elements:
 
 \begin{itemize}
-
-\item[PS1:] 
-
-\item[PS2:] ...
-
+\item[PS1:] The charged particle (with velocity $v_0$. charge $q$ and mass $m$) at initial point $x_0$.
+\item[PS2:] The bounded region of uniform magnetic field $\mathbf{B}$ and electrc field $\mathbf{E}$.
+\item[PS3:] The projectile.
+\item[PS4:] The detector plane.
+\item[PS5:] The impact point $x_{hit}$ on the detector plan.
 \end{itemize}
 
-\plt{A figure here makes sense for most SRS documents}
 
-% \begin{figure}[h!]
-% \begin{center}
-% %\rotatebox{-90}
-% {
-%  \includegraphics[width=0.5\textwidth]{<FigureName>}
-% }
-% \caption{\label{<Label>} <Caption>}
-% \end{center}
-% \end{figure}
+
+\begin{figure}[h!]
+\begin{center}
+ \IfFileExists{physical_system.jpg}{%
+  \includegraphics[width=0.9\textwidth]{physical_system.jpg}%
+}{%
+  \fbox{physical_system.jpg}%
+}
+\caption{The physical system}
+\label{Fig_PhysicalSystem}
+\end{center}
+\end{figure}
+
 
 \subsubsection{Goal Statements}
 
-\plt{The goal statements refine the ``Problem Description''
-  (Section~\ref{Sec_pd}).  A goal is a functional objective the system under
-  consideration should achieve. Goals provide criteria for sufficient
-  completeness of a requirements specification and for requirements
-  pertinence. Goals will be refined in Section “Instanced Models”
-  (Section~\ref{sec_instance}). Large and complex goals should be decomposed
-  into smaller sub-goals.  The goals are written abstractly, with a minimal
-  amount of technical language.  They should be understandable by non-domain
-  experts.}
-
-\noindent Given the \plt{inputs}, the goal statements are:
+\noindent Given the particle properties (charge and mass), initial conditions
+(initial position and velocity), the specification of electric and magnetic
+fields over one or more field regions, and the detector geometry, the goal
+statements are:
 
 \begin{itemize}
 
-\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_meaningfulLabel}:] \plt{One
-    sentence description of the goal.  There may be more than one.  Each Goal
-    should have a meaningful label.}
+\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_Trajectory}:]
+Predict the trajectory of a charged particle as it moves through specified
+electric and magnetic field regions.
+
+\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_DetectorOutcome}:]
+Determine impact position and time-of-flight at a specified detector line.
 
 \end{itemize}
 
+
 \subsection{Solution Characteristics Specification}
 
-\plt{This section specifies the information in the solution domain of the system
-  to be developed. This section is intended to express what is required in
-  such a way that analysts and stakeholders get a clear picture, and the
-  latter will accept it. The purpose of this section is to reduce the problem
-  into one expressed in mathematical terms. Mathematical expertise is used to
-  extract the essentials from the underlying physical description of the
-  problem, and to collect and substantiate all physical data pertinent to the
-  problem.}
+This section first presents the problem description, which gives a high-level view of the problem to be solved. This is followed by the solution characteristics specification, which presents the assumptions, theories, and definitions that are used.
 
-\plt{This section presents the solution characteristics by successively refining
-  models.  It starts with the abstract/general Theoretical Models (TMs) and
-  refines them to the concrete/specific Instance Models (IMs).  If necessary
-  there are intermediate refinements to General Definitions (GDs).  All of these
-  refinements can potentially use Assumptions (A) and Data Definitions (DD).
-  TMs are refined to create new models, that are called GMs or IMs. DDs are not
-  refined; they are just used. GDs and IMs are derived, or refined, from other
-  models. DDs are not derived; they are just given. TMs are also just given, but
-  they are refined, not used.  If a potential DD includes a derivation, then
-  that means it is refining other models, which would make it a GD or an IM.}
+% \plt{This section specifies the information in the solution domain of the system
+%   to be developed. This section is intended to express what is required in
+%   such a way that analysts and stakeholders get a clear picture, and the
+%   latter will accept it. The purpose of this section is to reduce the problem
+%   into one expressed in mathematical terms. Mathematical expertise is used to
+%   extract the essentials from the underlying physical description of the
+%   problem, and to collect and substantiate all physical data pertinent to the
+%   problem.}
 
-\plt{The above makes a distinction between ``refined'' and ``used.'' A model is
-  refined to another model if it is changed by the refinement. When we change a
-  general 3D equation to a 2D equation, we are making a refinement, by applying
-  the assumption that the third dimension does not matter. If we use a
-  definition, like the definition of density, we aren't refining, or changing
-  that definition, we are just using it.}
+% \plt{This section presents the solution characteristics by successively refining
+%   models.  It starts with the abstract/general Theoretical Models (TMs) and
+%   refines them to the concrete/specific Instance Models (IMs).  If necessary
+%   there are intermediate refinements to General Definitions (GDs).  All of these
+%   refinements can potentially use Assumptions (A) and Data Definitions (DD).
+%   TMs are refined to create new models, that are called GMs or IMs. DDs are not
+%   refined; they are just used. GDs and IMs are derived, or refined, from other
+%   models. DDs are not derived; they are just given. TMs are also just given, but
+%   they are refined, not used.  If a potential DD includes a derivation, then
+%   that means it is refining other models, which would make it a GD or an IM.}
 
-\plt{The same information can be a TM in one problem and a DD in another.  It is
-  about how the information is used.  In one problem the definition of
-  acceleration can be a TM, in another it would be a DD.}
+% \plt{The above makes a distinction between ``refined'' and ``used.'' A model is
+%   refined to another model if it is changed by the refinement. When we change a
+%   general 3D equation to a 2D equation, we are making a refinement, by applying
+%   the assumption that the third dimension does not matter. If we use a
+%   definition, like the definition of density, we aren't refining, or changing
+%   that definition, we are just using it.}
 
-\plt{There is repetition between the information given in the different chunks
-  (TM, GDs etc) with other information in the document.  For instance, the
-  meaning of the symbols, the units etc are repeated.  This is so that the
-  chunks can stand on their own when being read by a reviewer/user.  It also
-  facilitates reuse of the models in a different context.}
+% \plt{The same information can be a TM in one problem and a DD in another.  It is
+%   about how the information is used.  In one problem the definition of
+%   acceleration can be a TM, in another it would be a DD.}
 
-\noindent \plt{The relationships between the parts of the document are show in
-  the following figure.  In this diagram ``may ref'' has the same role as
-  ``uses'' above.  The figure adds ``Likely Changes,'' which are able to
-  reference (use) Assumptions.}
+% \plt{There is repetition between the information given in the different chunks
+%   (TM, GDs etc) with other information in the document.  For instance, the
+%   meaning of the symbols, the units etc are repeated.  This is so that the
+%   chunks can stand on their own when being read by a reviewer/user.  It also
+%   facilitates reuse of the models in a different context.}
 
-\begin{figure}[H]
-  \includegraphics[scale=0.9]{RelationsBetweenTM_GD_IM_DD_A.pdf}
-\end{figure}
+% \noindent \plt{The relationships between the parts of the document are show in
+%   the following figure.  In this diagram ``may ref'' has the same role as
+%   ``uses'' above.  The figure adds ``Likely Changes,'' which are able to
+%   reference (use) Assumptions.}
+
+% \begin{figure}[H]
+%   \IfFileExists{RelationsBetweenTM_GD_IM_DD_A.pdf}{%
+%     \includegraphics[scale=0.9]{RelationsBetweenTM_GD_IM_DD_A.pdf}%
+%   }{%
+%     \caption{(Placeholder) RelationsBetweenTM\_GD\_IM\_DD\_A.pdf not found.}%
+%   }
+% \end{figure}
 
 The instance models that govern \progname{} are presented in
 Subsection~\ref{sec_instance}.  The information to understand the meaning of the
@@ -646,29 +470,15 @@ models can be verified.
 
 \subsubsection{Types}
 
-\plt{This section is optional. Defining types can make the document easier to
-understand.}
+% \plt{This section is optional. Defining types can make the document easier to
+% understand.}
 
 \subsubsection{Scope Decisions}
 
-\plt{This section is optional.}
 \subsubsection{Modelling Decisions}
 
-\plt{This section is optional.}
 
 \subsubsection{Assumptions} \label{sec_assumpt}
-
-\plt{The assumptions are a refinement of the scope.  The scope is general, where
-  the assumptions are specific.  All assumptions should be listed, even those
-  that domain experts know so well that they are rarely (if ever) written down.}
-\plt{The document should not take for granted that the reader knows which
-  assumptions have been made. In the case of unusual assumptions, it is
-  recommended that the documentation either include, or point to, an explanation
-  and justification for the assumption.} 
-\plt{If it helps with the organization and understandability, the assumptions
-can be presented as sub sections.  The following sub-sections are options:
-background theory assumptions, helper theory assumptions, generic theory
-assumptions, problem specific assumptions, and rationale assumptions}
 
 This section simplifies the original problem and helps in developing the
 theoretical model by filling in the missing information for the physical system.
@@ -678,100 +488,241 @@ change [LC], in which the respective assumption is used.
 
 \begin{itemize}
 
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_meaningfulLabel}:]
-  \plt{Short description of each assumption.  Each assumption
-    should have a meaningful label.  Use cross-references to identify the
-    appropriate traceability to TM, GD, DD etc., using commands like dref, ddref
-    etc.  Each assumption should be atomic - that is, there should not be an
-    explicit (or implicit) ``and'' in the text of an assumption.}
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_piecewiseUniform}:]
+piecewiseUniform: The electric and magnetic fields are uniform within each field
+region and may change only at region boundaries.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_singleParticle}:]
+singleParticle: The particle is treated as a point mass and point charge.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_noInteractions}:]
+noInteractions: Collisions and particle--particle interactions (including
+space-charge effects) are neglected.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_prescribedFields}:]
+prescribedFields: The electric and magnetic fields are user-specified and remain
+fixed during the simulation.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_twoDMotion}:]
+twoDMotion: The particle motion is confined to the $x$--$y$ plane.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_BperpPlane}:]
+BperpPlane: The magnetic field is perpendicular to the $x$--$y$ plane.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_EaxisAligned}:]
+EaxisAligned: The electric field lies in the $x$--$y$ plane and is aligned with a
+coordinate axis.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_rectRegions}:]
+rectRegions: Field-region boundaries are rectangular and parallel to the $x$ and
+$y$ axes.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_lineDetector}:]
+lineDetector: The detector is modeled as a line located within the field region.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_fullDetection}:]
+fullDetection: The detector line is sufficiently long to record the impact point
+for any trajectory within the scope of the simulation.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_lorentzOnly}:]
+lorentzOnly: The particle dynamics are governed only by the Lorentz force; all
+other forces are neglected.
 
 \end{itemize}
 
+
+
 \subsubsection{Theoretical Models}\label{sec_theoretical}
 
-\plt{Theoretical models are sets of abstract mathematical equations or axioms
-  for solving the problem described in Section ``Physical System Description''
-  (Section~\ref{sec_phySystDescrip}). Examples of theoretical models are
-  physical laws, constitutive equations, relevant conversion factors, etc.}
-
-\plt{Optionally the theory section could be divided into subsections to provide
-more structure and improve understandability and reusability.  Potential
-subsections include the following: Context theories, background theories, helper
-theories, generic theories, problem specific theories, final theories and
-rationale theories.}
-
 This section focuses on the general equations and laws that \progname{} is based
-on.  \plt{Modify the examples below for your problem, and add additional models
-  as appropriate.}
-
-~\newline
+on.
 
 \noindent
 \deftheory
-% #2 refname of theory
-{TM:COE}
-% #3 label
-{Conservation of thermal energy}
-% #4 equation
+{TM:velVec}
+{Velocity (vector definition)}
 {
-  $-{\bf \nabla \cdot q} + g$ = $\rho C \frac{\partial T}{\partial t}$
+  $\mathbf{v}(t) = \dfrac{d\mathbf{r}(t)}{dt}$
 }
-% #5 description
 {
-  The above equation gives the conservation of energy for transient heat transfer in a material
-  of specific heat capacity $C$ (\si{\joule\per\kilogram\per\celsius}) and density $\rho$ 
-  (\si{\kilogram\per\cubic\metre}), where $\bf q$ is the thermal flux vector (\si{\watt\per\square\metre}),
-  $g$ is the volumetric heat generation
-  (\si{\watt\per\cubic\metre}), $T$ is the temperature
-  (\si{\celsius}),  $t$ is time (\si{\second}), and $\nabla$ is
-  the gradient operator.  For this equation to apply, other forms
-  of energy, such as mechanical energy, are assumed to be negligible in the
-  system (\aref{A_OnlyThermalEnergy}).  In general, the material properties ($\rho$ and $C$) depend on temperature.
+  $\mathbf{v}(t)$ is the particle velocity (\si{\metre\per\second}),
+  $\mathbf{r}(t)$ is the particle position (\si{\metre}), and
+  $t$ is time (\si{\second}).
 }
-% #6 Notes
-{
-None.
-}
-% #7 Source
-{
-  \url{http://www.efunda.com/formulae/heat_transfer/conduction/overview_cond.cfm}
-}
-% #8 Referenced by
-{
-  \dref{ROCT}
-}
-% #9 Preconditions
-{
-None
-}
-% #1 derivation - not applicable by default
+{None.}
+{\cite{WikiVelocity}}
+{\dref{GD_kin2D}}
+{None.}
 {}
 
-\plt{``Ref.\ By'' is used repeatedly with the different types of information.
-  This stands for Referenced By.  It means that the models, definitions and
-  assumptions listed reference the current model, definition or assumption.
-  This information is given for traceability.  Ref. By provides a pointer in the
-  opposite direction to what we commonly do.  You still need to have a reference
-  in the other direction pointing to the current model, definition or
-  assumption.  As an example, if TM1 is referenced by GD2, that means that GD2 will
-  explicitly include a reference to TM1.}
+
+\noindent
+\deftheory
+{TM:accVec}
+{Acceleration (vector definition)}
+{
+  $\mathbf{a}(t) = \dfrac{d\mathbf{v}(t)}{dt}$
+}
+{
+  $\mathbf{a}(t)$ is the particle acceleration (\si{\metre\per\second\squared}),
+  $\mathbf{v}(t)$ is the particle velocity (\si{\metre\per\second}), and
+  $t$ is time (\si{\second}).
+}
+{None.}
+{\cite{WikiAcceleration}}
+{\tref{TM:newton2}, \tref{TM:eqnMotion}}
+{None.}
+{}
+
+
+\noindent
+\deftheory
+{TM:newton2}
+{Newton's second law of motion}
+{
+  $\mathbf{F}(t) = m\,\mathbf{a}(t)$
+}
+{
+  $\mathbf{F}(t)$ is the net force on the particle (\si{\newton}),
+  $m$ is the particle mass (\si{\kilogram}), and
+  $\mathbf{a}(t)$ is the particle acceleration (\si{\metre\per\second\squared}).
+}
+{
+  The net force on a body is proportional to its acceleration, where $m$ is the
+  constant of proportionality.
+}
+{\cite{WikiAcceleration}}
+{\tref{TM:eqnMotion}}
+{\aref{A_singleParticle}}
+{}
+
+
+\noindent
+\deftheory
+{TM:lorentzForce}
+{Lorentz force law}
+{
+  $\mathbf{F}(t) = q\left(\mathbf{E} + \mathbf{v}(t)\times\mathbf{B}\right)$
+}
+{
+  $\mathbf{F}(t)$ is the electromagnetic force on the particle (\si{\newton}),
+  $q$ is the particle charge (\si{\coulomb}),
+  $\mathbf{E}$ is the electric field (\si{\newton\per\coulomb}),
+  $\mathbf{B}$ is the magnetic flux density (\si{\tesla}), and
+  $\mathbf{v}(t)$ is the particle velocity (\si{\metre\per\second}).
+}
+{None.}
+{\cite{WikiElectromagnetism}}
+{\tref{TM:eqnMotion}, \dref{GD_dyn2D}}
+{\aref{A_singleParticle}, \aref{A_prescribedFields}}
+{}
+
+
+\noindent
+\deftheory
+{TM:eqnMotion}
+{Equation of motion under electromagnetic fields}
+{
+  $m\,\dfrac{d\mathbf{v}(t)}{dt} = q\left(\mathbf{E} + \mathbf{v}(t)\times\mathbf{B}\right)$
+}
+{
+  This equation combines Newton's second law with the Lorentz force law to give
+  the governing ordinary differential equation (ODE) for the particle velocity
+  $\mathbf{v}(t)$ under specified electric and magnetic fields.
+}
+{None.}
+{\cite{WikiElectromagnetism}}
+{\dref{GD_dyn2D}, \iref{IM_stateEvol}}
+{\aref{A_singleParticle}, \aref{A_prescribedFields}, \aref{A_lorentzOnly}}
+{}
 
 ~\newline
 
-\subsubsection{General Definitions}\label{sec_gendef}
 
-\plt{General Definitions (GDs) are a refinement of one or more TMs, and/or of
-  other GDs.  The GDs are less abstract than the TMs.  Generally the reduction
-  in abstraction is possible through invoking (using/referencing) Assumptions.
-  For instance, the TM could be Newton's Law of Cooling stated abstracting.  The
-  GD could take the general law and apply it to get a 1D equation.}
+\subsubsection{General Definitions}\label{sec_gendef}
 
 This section collects the laws and equations that will be used in building the
 instance models.
 
-\plt{Some projects may not have any content for this section, but the section
-  heading should be kept.}  \plt{Modify the examples below for your problem, and
-  add additional definitions as appropriate.}
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& GD\refstepcounter{defnum}\thedefnum \label{GD_kin2D}\\
+\hline
+Label &\bf Two-dimensional kinematics in Cartesian coordinates \\
+\hline
+Units& \si{\metre\per\second}\\
+\hline
+Equation&
+$\dfrac{dx(t)}{dt} = v_x(t), \quad \dfrac{dy(t)}{dt} = v_y(t)$ \\
+\hline
+Description &
+The planar motion assumption (\aref{A_twoDMotion}) allows the particle position
+to be represented by $(x(t),y(t))$ and the velocity by $(v_x(t),v_y(t))$ in a
+Cartesian coordinate system. The equations define the velocity components as the
+time-derivatives of the corresponding position components.\\
+\hline
+Source & None\\
+\hline
+Ref.\ By & \iref{IM_stateEvol}\\
+\hline
+\end{tabular}
+\end{minipage}\\
+
+\subsubsection*{Detailed derivation of two-dimensional kinematics}
+Let $\mathbf{r}(t) = \langle x(t), y(t), 0\rangle$ and $\mathbf{v}(t) =
+\dfrac{d\mathbf{r}(t)}{dt}$ (from \tref{TM:velVec}). Taking components yields
+$\dfrac{dx(t)}{dt} = v_x(t)$ and $\dfrac{dy(t)}{dt} = v_y(t)$.
+
+~\newline
+
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& GD\refstepcounter{defnum}\thedefnum \label{GD_vCrossB2D}\\
+\hline
+Label &\bf Cross product $\mathbf{v}\times\mathbf{B}$ for out-of-plane magnetic field \\
+\hline
+Units& \si{\metre\per\second}\,\si{\tesla}\\
+\hline
+Equation&
+$\mathbf{v}(t)\times\mathbf{B} = \langle v_y(t)B,\; -v_x(t)B,\; 0\rangle$ \\
+\hline
+Description &
+Under planar motion (\aref{A_twoDMotion}) and an out-of-plane magnetic field
+(\aref{A_BperpPlane}), the velocity has the form
+$\mathbf{v}(t)=\langle v_x(t),v_y(t),0\rangle$ and the magnetic field has the
+form $\mathbf{B}=\langle 0,0,B\rangle$. The cross product then reduces to the
+stated component form.\\
+\hline
+Source & None\\
+\hline
+Ref.\ By & \dref{GD_dyn2D}\\
+\hline
+\end{tabular}
+\end{minipage}\\
+
+\subsubsection*{Detailed derivation of $\mathbf{v}\times\mathbf{B}$ in 2D}
+With $\mathbf{v}(t)=\langle v_x(t),v_y(t),0\rangle$ and
+$\mathbf{B}=\langle 0,0,B\rangle$,
+\[
+\mathbf{v}(t)\times\mathbf{B} =
+\begin{vmatrix}
+\mathbf{i} & \mathbf{j} & \mathbf{k}\\
+v_x(t) & v_y(t) & 0\\
+0 & 0 & B
+\end{vmatrix}
+= \langle v_y(t)B,\; -v_x(t)B,\; 0\rangle .
+\]
 
 ~\newline
 
@@ -781,58 +732,58 @@ instance models.
 \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
 \hline
 \rowcolor[gray]{0.9}
-Number& GD\refstepcounter{defnum}\thedefnum \label{NL}\\
+Number& GD\refstepcounter{defnum}\thedefnum \label{GD_dyn2D}\\
 \hline
-Label &\bf Newton's law of cooling \\
+Label &\bf Two-dimensional equations of motion under $\mathbf{E}$ and $\mathbf{B}$ \\
 \hline
-% Units&$MLt^{-3}T^0$\\
-% \hline
-SI Units&\si{\watt\per\square\metre}\\
+Units& \si{\metre\per\second\squared}\\
 \hline
-Equation&$ q(t) = h \Delta T(t)$  \\
+Equation&
+$\dfrac{dv_x(t)}{dt} = \dfrac{q}{m}\big(E_x + v_y(t)B\big), \quad
+ \dfrac{dv_y(t)}{dt} = \dfrac{q}{m}\big(E_y - v_x(t)B\big)$ \\
 \hline
 Description &
-Newton's law of cooling describes convective cooling from a surface.  The law is
-stated as: the rate of heat loss from a body is proportional to the difference
-in temperatures between the body and its surroundings.
-\\
-& $q(t)$ is the thermal flux (\si{\watt\per\square\metre}).\\
-& $h$ is the heat transfer coefficient, assumed independent of $T$ (\aref{A_hcoeff})
-	(\si{\watt\per\square\metre\per\celsius}).\\
-&$\Delta T(t)$= $T(t) - T_{\text{env}}(t)$ is the time-dependent thermal gradient
-between the environment and the object (\si{\celsius}).
-\\
+Assuming planar motion (\aref{A_twoDMotion}), prescribed fields (\aref{A_prescribedFields}),
+and an out-of-plane magnetic field (\aref{A_BperpPlane}), the Lorentz-force
+equation of motion (\tref{TM:eqnMotion}) can be written component-wise in the
+$x$--$y$ plane. Here $\mathbf{E}=\langle E_x,E_y,0\rangle$ and
+$\mathbf{B}=\langle 0,0,B\rangle$, yielding the stated ODEs for $v_x(t)$ and
+$v_y(t)$.\\
 \hline
-  Source & Citation here \\
-  \hline
-  Ref.\ By & \ddref{FluxCoil}, \ddref{FluxPCM}\\
-  \hline
+Source & None\\
+\hline
+Ref.\ By & \iref{IM_stateEvol}\\
+\hline
 \end{tabular}
 \end{minipage}\\
 
-\subsubsection*{Detailed derivation of simplified rate of change of temperature}
+\subsubsection*{Detailed derivation of the 2D equations of motion}
+From Newton's second law (\tref{TM:newton2}) and the Lorentz force law
+(\tref{TM:lorentzForce}),
+\[
+m\,\dfrac{d\mathbf{v}(t)}{dt} = q\left(\mathbf{E} + \mathbf{v}(t)\times\mathbf{B}\right).
+\]
+Using $\mathbf{E}=\langle E_x,E_y,0\rangle$ and the 2D cross product reduction
+(\dref{GD_vCrossB2D}),
+\[
+\mathbf{E} + \mathbf{v}(t)\times\mathbf{B}
+= \langle E_x + v_y(t)B,\; E_y - v_x(t)B,\; 0\rangle .
+\]
+Equating components gives
+\[
+m\,\dfrac{dv_x(t)}{dt} = q\big(E_x + v_y(t)B\big), \quad
+m\,\dfrac{dv_y(t)}{dt} = q\big(E_y - v_x(t)B\big),
+\]
+and dividing by $m$ yields the stated ODEs.
 
-\plt{This may be necessary when the necessary information does not fit in the
-  description field.}
-\plt{Derivations are important for justifying a given GD.  You want it to be
-  clear where the equation came from.}
 
 \subsubsection{Data Definitions}\label{sec_datadef}
 
-\plt{The Data Definitions are definitions of symbols and equations that are
-  given for the problem.  They are not derived; they are simply used by other
-  models.  For instance, if a problem depends on density, there may be a data
-  definition for the equation defining density.  The DDs are given information
-  that you can use in your other modules.}
-
-\plt{All Data Definitions should be used (referenced) by at least one other
-  model.}
-
 This section collects and defines all the data needed to build the instance
-models. The dimension of each quantity is also given.  \plt{Modify the examples
-  below for your problem, and add additional definitions as appropriate.}
+models.
 
 ~\newline
+
 
 \noindent
 \begin{minipage}{\textwidth}
@@ -840,183 +791,429 @@ models. The dimension of each quantity is also given.  \plt{Modify the examples
 \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
 \hline
 \rowcolor[gray]{0.9}
-Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{FluxCoil}\\
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_qOverm}\\
 \hline
-Label& \bf Heat flux out of coil\\
+Label& \bf Charge-to-mass ratio\\
 \hline
-Symbol &$q_C$\\
+Symbol &$\kappa$\\
 \hline
-% Units& $Mt^{-3}$\\
-% \hline
-  SI Units & \si{\watt\per\square\metre}\\
-  \hline
-  Equation&$q_C(t) = h_C (T_C - T_W(t))$, over area $A_C$\\
-  \hline
-  Description & 
-                $T_C$ is the temperature of the coil (\si{\celsius}).  $T_W$ is the temperature of the water (\si{\celsius}).  
-                The heat flux out of the coil, $q_C$ (\si{\watt\per\square\metre}), is found by
-                assuming that Newton's Law of Cooling applies (\aref{A_Newt_coil}).  This law (\dref{NL}) is used on the 
-                surface of the coil, which has area $A_C$ (\si{\square\metre}) and heat 
-                transfer coefficient $h_C$ (\si{\watt\per\square\metre\per\celsius}).  This equation
-                assumes that the temperature of the coil is constant over time (\aref{A_tcoil}) and that it does not vary along the length
-                of the coil (\aref{A_tlcoil}).
-  \\
-  \hline
-  Sources& Citation here \\
-  \hline
-  Ref.\ By & \iref{ewat}\\
-  \hline
+Units & \si{\coulomb\per\kilogram}\\
+\hline
+Equation& $\kappa = \dfrac{q}{m}$\\
+\hline
+Description &
+$q$ is the particle charge (\si{\coulomb}) and $m$ is the particle mass
+(\si{\kilogram}). The ratio $\kappa$ is used to simplify the equations of motion.
+\\
+\hline
+Sources& None\\ \hline
+Ref.\ By & \iref{IM_stateEvol}\\ \hline
 \end{tabular}
 \end{minipage}\\
+
+~\newline
+
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_initState}\\
+\hline
+Label& \bf Initial state in the $x$--$y$ plane\\
+\hline
+Symbol &$\mathbf{s}_0$\\
+\hline
+Units & \si{\metre}, \si{\metre\per\second}\\
+\hline
+Equation& $\mathbf{s}_0 = \langle x_0,\; y_0,\; v_{0x},\; v_{0y}\rangle$\\
+\hline
+Description &
+$x_0,y_0$ are the initial position components (\si{\metre}) and
+$v_{0x},v_{0y}$ are the initial velocity components (\si{\metre\per\second}).
+\\
+\hline
+Sources& None\\ \hline
+Ref.\ By & \iref{IM_stateEvol}\\ \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_EField}\\
+\hline
+Label& \bf Electric field vector\\
+\hline
+Symbol &$\mathbf{E}$\\
+\hline
+Units & \si{\newton\per\coulomb}\\
+\hline
+Equation& $\mathbf{E}=\langle E_x,\; E_y,\; 0\rangle$\\
+\hline
+Description &
+$\mathbf{E}$ is the electric field. $E_x$ and $E_y$ are the in-plane components
+(\si{\newton\per\coulomb}).
+\\
+\hline
+Sources& None\\ \hline
+Ref.\ By & \ddref{DD_fieldsByRegion}, \dref{GD_dyn2D}\\ \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_BField}\\
+\hline
+Label& \bf Magnetic flux density vector\\
+\hline
+Symbol &$\mathbf{B}$\\
+\hline
+Units & \si{\tesla}\\
+\hline
+Equation& $\mathbf{B}=\langle 0,\;0,\;B\rangle$\\
+\hline
+Description &
+$\mathbf{B}$ is the magnetic flux density. $B$ is the out-of-plane component
+(\si{\tesla}).
+\\
+\hline
+Sources& None\\ \hline
+Ref.\ By & \ddref{DD_fieldsByRegion}, \dref{GD_vCrossB2D}, \dref{GD_dyn2D}\\ \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_regionRect}\\
+\hline
+Label& \bf Rectangular field region\\
+\hline
+Symbol &$R_i$\\
+\hline
+Units & \si{\metre}\\
+\hline
+Equation&
+$R_i = [x^{(i)}_{\min},x^{(i)}_{\max}]\times[y^{(i)}_{\min},y^{(i)}_{\max}]$\\
+\hline
+Description &
+$R_i$ is the $i$th field region. The parameters
+$x^{(i)}_{\min},x^{(i)}_{\max},y^{(i)}_{\min},y^{(i)}_{\max}$ define the region
+boundaries in the $x$--$y$ plane (all in \si{\metre}).
+\\
+\hline
+Sources& None\\ \hline
+Ref.\ By & \ddref{DD_fieldsByRegion}\\ \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+%--------------------------------------------------------------------
+% DD 6: piecewise-constant fields by region
+%--------------------------------------------------------------------
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_fieldsByRegion}\\
+\hline
+Label& \bf Piecewise-constant fields\\
+\hline
+Symbol & $\mathbf{E}_i,\mathbf{B}_i$\\
+\hline
+Units & \si{\newton\per\coulomb}, \si{\tesla}\\
+\hline
+Equation&
+$\mathbf{E}(\mathbf{r})=\mathbf{E}_i,\ \mathbf{B}(\mathbf{r})=\mathbf{B}_i,\ \forall \mathbf{r}\in R_i$\\
+\hline
+Description &
+$\mathbf{E}_i$ and $\mathbf{B}_i$ are the constant electric and magnetic field
+values assigned to region $R_i$. The fields may differ between regions.
+\\
+\hline
+Sources& None\\ \hline
+Ref.\ By & \iref{IM_stateEvol}\\ \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+%--------------------------------------------------------------------
+% DD 7: detector line
+%--------------------------------------------------------------------
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_detectorLine}\\
+\hline
+Label& \bf Detector line\\
+\hline
+Symbol &$L_{\mathrm{det}}$\\
+\hline
+Units & \si{\metre}\\
+\hline
+Equation&
+$L_{\mathrm{det}}=\{(x,y)\ |\ x=x_{\mathrm{det}},\ y\in[y_{\min}^{\mathrm{det}},y_{\max}^{\mathrm{det}}]\}$\\
+\hline
+Description &
+$L_{\mathrm{det}}$ is the detector line segment located at $x=x_{\mathrm{det}}$.
+The endpoints are defined by $y_{\min}^{\mathrm{det}}$ and $y_{\max}^{\mathrm{det}}$
+(all in \si{\metre}).
+\\
+\hline
+Sources& None\\ \hline
+Ref.\ By & \iref{IM_detHit}\\ \hline
+\end{tabular}
+\end{minipage}\\
+
 
 \subsubsection{Data Types}\label{sec_datatypes}
 
-\plt{This section is optional.  In many scientific computing programs it isn't
-  necessary, since the inputs and outpus are straightforward types, like reals,
-  integers, and sequences of reals and integers.  However, for some problems it
-  is very helpful to capture the type information.}
+% \plt{This section is optional.  In many scientific computing programs it isn't
+%   necessary, since the inputs and outpus are straightforward types, like reals,
+%   integers, and sequences of reals and integers.  However, for some problems it
+%   is very helpful to capture the type information.}
 
-\plt{The data types are not derived; they are simply stated and used by other
-  models.}
+% \plt{The data types are not derived; they are simply stated and used by other
+%   models.}
 
-\plt{All data types must be used by at least one of the models.}
+% \plt{All data types must be used by at least one of the models.}
 
-\plt{For the mathematical notation for expressing types, the recommendation is
-  to use the notation of~\citet{HoffmanAndStrooper1995}.}
+% \plt{For the mathematical notation for expressing types, the recommendation is
+%   to use the notation of~\citet{HoffmanAndStrooper1995}.}
 
 This section collects and defines all the data types needed to document the
-models. \plt{Modify the examples below for your problem, and add additional
-  definitions as appropriate.}
+% models. \plt{Modify the examples below for your problem, and add additional
+%   definitions as appropriate.}
 
-~\newline
+% ~\newline
 
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Type Name & Name for Type\\
-  \hline
-  Type Def & mathematical definition of the type\\
-  \hline
-  Description & description here
-  \\
-  \hline
-  Sources & Citation here, if the type is borrowed from another source\\
-  \hline
-\end{tabular}
-\end{minipage}\\
+% \noindent
+% \begin{minipage}{\textwidth}
+% \renewcommand*{\arraystretch}{1.5}
+% \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+%   \hline
+%   \rowcolor[gray]{0.9}
+%   Type Name & Name for Type\\
+%   \hline
+%   Type Def & mathematical definition of the type\\
+%   \hline
+%   Description & description here
+%   \\
+%   \hline
+%   Sources & Citation here, if the type is borrowed from another source\\
+%   \hline
+% \end{tabular}
+% \end{minipage}\\
 
-\subsubsection{Instance Models} \label{sec_instance}    
+\subsubsection{Instance Models} \label{sec_instance}
 
-\plt{The motivation for this section is to reduce the problem defined in
-  ``Physical System Description'' (Section~\ref{sec_phySystDescrip}) to one
-  expressed in mathematical terms. The IMs are built by refining the TMs and/or
-  GDs.  This section should remain abstract.  The SRS should specify the
-  requirements without considering the implementation.}
-
-This section transforms the problem defined in Section~\ref{Sec_pd} into 
-one which is expressed in mathematical terms. It uses concrete symbols defined 
-in Section~\ref{sec_datadef} to replace the abstract symbols in the models 
+This section transforms the problem defined in Section~\ref{Sec_pd} into
+one which is expressed in mathematical terms. It uses concrete symbols defined
+in Section~\ref{sec_datadef} to replace the abstract symbols in the models
 identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
 
-The goals \plt{reference your goals} are solved by \plt{reference your instance
-  models}.  \plt{other details, with cross-references where appropriate.}
-\plt{Modify the examples below for your problem, and add additional models as
-  appropriate.}
+The goals \gsref{G_Trajectory} and \gsref{G_DetectorOutcome}
+are solved by \iref{IM_stateEvol} and \iref{IM_detHit},
+respectively. The instance models are derived from the equation of motion
+(\tref{TM:eqnMotion}) and the general definitions (\dref{GD_kin2D}, \dref{GD_dyn2D})
+under the assumptions in Section~\ref{sec_assumpt}.
 
 ~\newline
 
-%Instance Model 1
-
+%--------------------------------------------------------------------
+% Instance Model 1: state evolution under piecewise-uniform fields
+%--------------------------------------------------------------------
 \noindent
 \begin{minipage}{\textwidth}
 \renewcommand*{\arraystretch}{1.5}
 \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
   \hline
   \rowcolor[gray]{0.9}
-  Number& IM\refstepcounter{instnum}\theinstnum \label{ewat}\\
+  Number& IM\refstepcounter{instnum}\theinstnum \label{IM_stateEvol}\\
   \hline
-  Label& \bf Energy balance on water to find $T_W$\\
+  Label& \bf Particle state evolution in the $x$--$y$ plane\\
   \hline
-  Input&$m_W$, $C_W$, $h_C$, $A_C$, $h_P$, $A_P$, $t_\text{final}$, $T_C$, 
-  $T_\text{init}$, $T_P(t)$ from \iref{epcm}\\
-  & The input is constrained so that $T_\text{init} \leq T_C$ (\aref{A_charge})\\
+  Input&
+  $m, q, x_0, y_0, v_{0x}, v_{0y}, \{R_i\}_{i=1..N}, \{\mathbf{E}_i\}_{i=1..N}, \{\mathbf{B}_i\}_{i=1..N}, t_{\text{final}}$\\
+  & Constraints: $m>0$, $q\neq 0$, $t_{\text{final}}>0$, and each $R_i$ is a non-degenerate axis-aligned rectangle.\\
   \hline
-  Output&$T_W(t)$, $0\leq t \leq t_\text{final}$, such that\\
-  &$\frac{dT_W}{dt} = \frac{1}{\tau_W}[(T_C - T_W(t)) + {\eta}(T_P(t) - T_W(t))]$,\\
-  &$T_W(0) = T_P(0) = T_\text{init}$ (\aref{A_InitTemp}) and $T_P(t)$ from \iref{epcm} \\
+  Output&
+  $\mathbf{s}(t)=\langle x(t),y(t),v_x(t),v_y(t)\rangle$ for $0\le t\le t_{\text{final}}$,
+  such that\\
+  & $\dfrac{dx}{dt} = v_x(t)$, \quad $\dfrac{dy}{dt} = v_y(t)$,\\
+  & $\dfrac{dv_x}{dt} = \kappa\left(E_x(t) + v_y(t)\,B(t)\right)$,\\
+  & $\dfrac{dv_y}{dt} = \kappa\left(E_y(t) - v_x(t)\,B(t)\right)$,\\
+  & with initial condition $\mathbf{s}(0)=\langle x_0,y_0,v_{0x},v_{0y}\rangle$.\\
   \hline
-  Description&$T_W$ is the water temperature (\si{\celsius}).\\
-  &$T_P$ is the PCM temperature (\si{\celsius}).\\
-  &$T_C$ is the coil temperature (\si{\celsius}).\\
-  &$\tau_W = \frac{m_W C_W}{h_C A_C}$ is a constant (\si{\second}).\\
-  &$\eta = \frac{h_P A_P}{h_C A_C}$ is a constant (dimensionless).\\
-  & The above equation applies as long as the water is in liquid form,
-  $0<T_W<100^o\text{C}$, where $0^o\text{C}$ and $100^o\text{C}$ are the melting
-  and boiling points of water, respectively (\aref{A_OpRange}, \aref{A_Pressure}).
-  \\
+  Description&
+  $\kappa = q/m$ is the charge-to-mass ratio.\\
+  & $(E_x(t),E_y(t))$ and $B(t)$ are determined by which region $R_i$ contains $(x(t),y(t))$:\\
+  & if $(x(t),y(t))\in R_i$, then $\mathbf{E}(t)=\mathbf{E}_i=\langle E_x,E_y,0\rangle$
+    and $\mathbf{B}(t)=\mathbf{B}_i=\langle 0,0,B\rangle$.\\
+  & The model supports $E$-only, $B$-only, and crossed-field configurations by allowing
+  $\mathbf{E}_i=\mathbf{0}$ and/or $\mathbf{B}_i=\mathbf{0}$ in any region.\\
   \hline
-  Sources& Citation here \\
+  Sources& None\\
   \hline
-  Ref.\ By & \iref{epcm}\\
+  Ref.\ By & None\\
   \hline
 \end{tabular}
 \end{minipage}\\
 
-%~\newline
+\subsubsection*{Derivation of \iref{IM_stateEvol}}
+The governing ODE for the velocity is given by the equation of motion under electromagnetic
+fields (\tref{TM:eqnMotion}). Under planar motion and the specified field orientations
+(\aref{A_twoDMotion}, \aref{A_BperpPlane}, \aref{A_EaxisAligned}), the component form of
+the dynamics is captured by \dref{GD_dyn2D}. The kinematic relations between position and
+velocity components are given by \dref{GD_kin2D}. Combining \dref{GD_dyn2D} with
+\dref{GD_kin2D}, and using $\kappa=q/m$ (\ddref{DD_qOverm}), yields the coupled first-order
+ODE system in \iref{IM_stateEvol}. Piecewise-uniform regions and fixed user-specified fields
+(\aref{A_piecewiseUniform}, \aref{A_prescribedFields}, \aref{A_rectRegions}) determine how
+$\mathbf{E}(t)$ and $\mathbf{B}(t)$ are selected during the evolution.
 
-\subsubsection*{Derivation of ...}
+~\newline
 
-\plt{The derivation shows how the IM is derived from the TMs/GDs.  In cases
-  where the derivation cannot be described under the Description field, it will
-  be necessary to include this subsection.}
+%--------------------------------------------------------------------
+% Instance Model 2: first detector hit
+%--------------------------------------------------------------------
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+  \hline
+  \rowcolor[gray]{0.9}
+  Number& IM\refstepcounter{instnum}\theinstnum \label{IM_detHit}\\
+  \hline
+  Label& \bf First detector intersection (hit time and hit location)\\
+  \hline
+  Input&
+  $x_{\mathrm{det}}, y_{\min}^{\mathrm{det}}, y_{\max}^{\mathrm{det}}, x(t), y(t), t_{\text{final}}$\\
+  & Constraints: $y_{\min}^{\mathrm{det}}<y_{\max}^{\mathrm{det}}$ and $0\le t\le t_{\text{final}}$.\\
+  \hline
+  Output&
+  $t_{\mathrm{hit}}$ and $(x_{\mathrm{hit}},y_{\mathrm{hit}})$ such that\\
+  & $t_{\mathrm{hit}} = \min\{t\in[0,t_{\text{final}}]\;|\;x(t)=x_{\mathrm{det}}
+  \ \land\ y(t)\in[y_{\min}^{\mathrm{det}},y_{\max}^{\mathrm{det}}]\}$,\\
+  & $x_{\mathrm{hit}} = x_{\mathrm{det}}$, \quad $y_{\mathrm{hit}} = y(t_{\mathrm{hit}})$.\\
+  \hline
+  Description&
+  The detector is modeled as a vertical line segment at $x=x_{\mathrm{det}}$ with endpoints
+  $y_{\min}^{\mathrm{det}}$ and $y_{\max}^{\mathrm{det}}$.\\
+  & If the set defining $t_{\mathrm{hit}}$ is empty, then no detector hit occurs within
+  $[0,t_{\text{final}}]$.\\
+  \hline
+  Sources& None\\
+  \hline
+  Ref.\ By & None\\
+  \hline
+\end{tabular}
+\end{minipage}\\
 
-\subsubsection{Input Data Constraints} \label{sec_DataConstraints}    
+\subsubsection*{Derivation of \iref{IM_detHit}}
+The detector geometry is defined as a line segment (\ddref{DD_detectorLine}). The computed
+trajectory $(x(t),y(t))$ is provided by \iref{IM_stateEvol}. The detector hit is the earliest
+time at which the trajectory satisfies the detector-line condition and lies within the detector
+segment bounds. This event definition yields the expression for $t_{\mathrm{hit}}$ and the
+corresponding hit point $(x_{\mathrm{hit}},y_{\mathrm{hit}})$.
 
-Table~\ref{TblInputVar} shows the data constraints on the input output
-variables.  The column for physical constraints gives the physical limitations
-on the range of values that can be taken by the variable.  The column for
-software constraints restricts the range of inputs to reasonable values.  The
-software constraints will be helpful in the design stage for picking suitable
-algorithms.  The constraints are conservative, to give the user of the model the
-flexibility to experiment with unusual situations.  The column of typical values
-is intended to provide a feel for a common scenario.  The uncertainty column
+~\newline
+
+
+
+
+
+\subsubsection{Data Constraints} \label{sec_DataConstraints}
+
+The Input Data Constraints Table shows the data constraints on the input
+variables. The column for physical constraints gives the physical limitations on
+the range of values that can be taken by the variable. The uncertainty column
 provides an estimate of the confidence with which the physical quantities can be
-measured.  This information would be part of the input if one were performing an
-uncertainty quantification exercise.
-
-The specification parameters in Table~\ref{TblInputVar} are listed in
-Table~\ref{TblSpecParams}.
-
-\begin{table}[!h]
-  \caption{Input Variables} \label{TblInputVar}
-  \renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l l l c} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} &
-                             \textbf{Typical Value} & \textbf{Uncertainty}\\
-  \midrule 
-  $L$ & $L > 0$ & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol] {\metre} & 10\%
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
-
-\noindent 
-\begin{description}
-\item[(*)] \plt{you might need to add some notes or clarifications}
-\end{description}
+measured. This information would be part of the input if one were performing an
+uncertainty quantification exercise. The constraints are conservative to give
+the user of the model the flexibility to experiment with unusual situations. The
+column of typical values is intended to provide a feel for a common scenario.
 
 \begin{table}[!h]
-\caption{Specification Parameter Values} \label{TblSpecParams}
+\caption{Input Data Constraints} \label{TblInputVar}
 \renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
+\noindent \begin{longtable*}{l l l l}
   \toprule
-  \textbf{Var} & \textbf{Value} \\
-  \midrule 
-  $L_\text{min}$ & 0.1 \si{\metre}\\
+  \textbf{Var} & \textbf{Physical Constraints} & \textbf{Typical Value} & \textbf{Uncert.} \\
+  \midrule
+  $m$ &
+  $m > 0$ &
+  $9.11\times 10^{-31}\ \si{\kilogram}$ &
+  $10\%$
+  \\
+  $q$ &
+  $q \neq 0$ &
+  $-1.60\times 10^{-19}\ \si{\coulomb}$ &
+  $10\%$
+  \\
+  $(x_0,y_0)$ &
+  $(x_0,y_0)\in R_1$ &
+  $(0,0)\ \si{\metre}$ &
+  $0\%$
+  \\
+  $v_0$ &
+  $v_0 = \sqrt{v_{0x}^2+v_{0y}^2} > 0$ &
+  $1.0\times 10^{6}\ \si{\metre\per\second}$ &
+  $10\%$
+  \\
+  $R_i$ &
+  $x^{(i)}_{\min} < x^{(i)}_{\max}$ and $y^{(i)}_{\min} < y^{(i)}_{\max}$ &
+  $0.10\times 0.10\ \si{\metre\times\metre}$ &
+  $0\%$
+  \\
+  $\mathbf{E}_i$ &
+  $\mathbf{E}_i=\langle E_x,E_y,0\rangle$ &
+  $1.0\times 10^{3}\ \si{\newton\per\coulomb}$ &
+  $10\%$
+  \\
+  $\mathbf{B}_i$ &
+  $\mathbf{B}_i=\langle 0,0,B\rangle$ &
+  $1.0\times 10^{-2}\ \si{\tesla}$ &
+  $10\%$
+  \\
+  $L_{\mathrm{det}}$ &
+  $y^{\mathrm{det}}_{\min} < y^{\mathrm{det}}_{\max}$ and $x_{\mathrm{det}}$ is within the modeled domain &
+  $x_{\mathrm{det}} = 0.08\ \si{\metre}$ &
+  $0\%$
+  \\
+  $t_{\text{final}}$ &
+  $t_{\text{final}} > 0$ &
+  $1.0\times 10^{-6}\ \si{\second}$ &
+  $10\%$
+  \\
   \bottomrule
 \end{longtable*}
 \end{table}
@@ -1024,34 +1221,52 @@ Table~\ref{TblSpecParams}.
 \subsubsection{Properties of a Correct Solution} \label{sec_CorrectSolution}
 
 \noindent
-A correct solution must exhibit \plt{fill in the details}.  \plt{These
-  properties are in addition to the stated requirements.  There is no need to
-  repeat the requirements here.  These additional properties may not exist for
-  every problem.  Examples include conservation laws (like conservation of
-  energy or mass) and known constraints on outputs, which are usually summarized
-  in tabular form.  A sample table is shown in Table~\ref{TblOutputVar}}
+A correct solution must exhibit physically meaningful output values and known
+constraints implied by the model structure (for instance, event definitions and
+invariants in special cases). These properties are in addition to the stated
+requirements.
 
 \begin{table}[!h]
-\caption{Output Variables} \label{TblOutputVar}
+\caption{Output Data Constraints} \label{TblOutputVar}
 \renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
+\noindent \begin{longtable*}{l l}
   \toprule
   \textbf{Var} & \textbf{Physical Constraints} \\
-  \midrule 
-  $T_W$ & $T_\text{init} \leq T_W \leq T_C$ (by~\aref{A_charge})
+  \midrule
+  $t_{\mathrm{hit}}$ &
+  $0 \le t_{\mathrm{hit}} \le t_{\text{final}}$ (if a hit occurs)
+  \\
+  $(x_{\mathrm{hit}},y_{\mathrm{hit}})$ &
+  $x_{\mathrm{hit}} = x_{\mathrm{det}}$ and
+  $y^{\mathrm{det}}_{\min} \le y_{\mathrm{hit}} \le y^{\mathrm{det}}_{\max}$ (if a hit occurs)
+  \\
+  $\Delta y_{\mathrm{hit}}$ &
+  $\Delta y_{\mathrm{hit}} = y_{\mathrm{hit}} - y_{\mathrm{ref}}(x_{\mathrm{det}})$, where
+  $y_{\mathrm{ref}}(x_{\mathrm{det}})= y_0 + \dfrac{v_{0y}}{v_{0x}}(x_{\mathrm{det}}-x_0)$
   \\
   \bottomrule
 \end{longtable*}
 \end{table}
 
-\plt{This section is not for test cases or techniques for verification and
-  validation.  Those topics will be addressed in the Verification and Validation
-  plan.}
+\noindent
+In addition, the following invariants should hold in the corresponding special
+cases:
+\begin{itemize}
+\item If $\mathbf{E}=\mathbf{0}$ in a region (magnetic-only motion), the speed
+  magnitude is constant within that region: $v_x(t)^2 + v_y(t)^2 =$ constant.
+\item If $\mathbf{E}=\mathbf{0}$ and $\mathbf{B}=\mathbf{0}$ in a region (field-free motion),
+  the velocity is constant and the trajectory is a straight line in that region.
+\end{itemize}
+
+% \plt{This section is not for test cases or techniques for verification and
+%   validation. Those topics will be addressed in the Verification and Validation
+%   plan.}
+
 
 \section{Requirements}
 
-\plt{The requirements refine the goal statement.  They will make heavy use of
-  references to the instance models.}
+% \plt{The requirements refine the goal statement.  They will make heavy use of
+%   references to the instance models.}
 
 This section provides the functional requirements, the business tasks that the
 software is expected to complete, and the nonfunctional requirements, the
@@ -1061,95 +1276,63 @@ qualities that the software is expected to exhibit.
 
 \noindent \begin{itemize}
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
-    for the inputs that are supplied by the user.  This information has to be
-    explicit.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_inputSpec}:]
+inputSpec: Accept $q,m,\mathbf{x}_0,\mathbf{v}_0$, field regions ($\mathbf{E},\mathbf{B}$ and
+boundaries), and a detector line definition.
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
-    always required, but often echoing the inputs as part of the output is a
-    good idea.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_echoInputs}:]
+echoInputs: Echo the input specification used for a run.
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
-    related requirements.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_computeTraj}:]
+computeTraj: Compute the particle trajectory over time under the specified fields.
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
-  \plt{Verification related requirements.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_detectHit}:]
+detectHit: Detect when the trajectory intersects the detector line and record
+$\mathbf{x}_{\mathrm{hit}}$ and $t_{\mathrm{hit}}$.
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
-    requirements.}
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_reportOutputs}:]
+reportOutputs: Output sampled trajectory data and detector results (when a hit occurs).
 
 \end{itemize}
 
-\plt{Every IM should map to at least one requirement, but not every requirement
-  has to map to a corresponding IM.}
 
 \subsection{Nonfunctional Requirements}
-
-\plt{List your nonfunctional requirements.  You may consider using a fit
-  criterion to make them verifiable.}
-\plt{The goal is for the nonfunctional requirements to be unambiguous, abstract
-  and verifiable.  This isn't easy to show succinctly, so a good strategy may be
-to give a ``high level'' view of the requirement, but allow for the details to
-be covered in the Verification and Validation document.}
-\plt{An absolute requirement on a quality of the system is rarely needed.  For
-  instance, an accuracy of 0.0101 \% is likely fine, even if the requirement is
-  for 0.01 \% accuracy.  Therefore, the emphasis will often be more on
-  describing now well the quality is achieved, through experimentation, and
-  possibly theory, rather than meeting some bar that was defined a priori.}
-\plt{You do not need an entry for correctness in your NFRs.  The purpose of the
-  SRS is to record the requirements that need to be satisfied for correctness.
-  Any statement of correctness would just be redundant. Rather than discuss
-  correctness, you can characterize how far away from the correct (true)
-  solution you are allowed to be.  This is discussed under accuracy.}
 
 \noindent \begin{itemize}
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Accuracy}:]
-  \textbf{Accuracy} \plt{Characterize the accuracy by giving the context/use for
-    the software.  Maybe something like, ``The accuracy of the computed
-    solutions should meet the level needed for $<$engineering or scientific
-    application$>$.  The level of accuracy achieved by \progname{} shall be
-    described following the procedure given in Section~X of the Verification and
-    Validation Plan.''  A link to the VnV plan would be a nice extra.}
+\textbf{Accuracy} The accuracy of the computed trajectory and detector outcomes
+shall be sufficient for educational and exploratory use in introductory
+electromagnetism. The achieved accuracy shall be demonstrated using the
+procedures and acceptance criteria defined in the Verification and Validation
+Plan (VnV).
 
-\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:] \textbf{Usability}
-  \plt{Characterize the usability by giving the context/use for the software.
-    You should likely reference the user characteristics section.  The level of
-    usability achieved by the software shall be described following the
-    procedure given in Section~X of the Verification and Validation Plan.  A
-    link to the VnV plan would be a nice extra.}
+\item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
+\textbf{Usability} Users consistent with Section~\ref{SecUserCharacteristics}
+shall be able to run the provided example scenarios and interpret the reported
+outputs. Usability shall be assessed following the procedures in the VnV.
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
-  \textbf{Maintainability} \plt{The effort required to make any of the likely
-    changes listed for \progname{} should be less than FRACTION of the original
-    development time.  FRACTION is then a symbolic constant that can be defined
-    at the end of the report.}
+\textbf{Maintainability} The effort required to implement any likely change shall be
+less than 0.25 of the original development effort.
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-  \textbf{Portability} \plt{This NFR is easier to write than the others.  The
-    systems that \progname{} should run on should be listed here.  When possible
-    the specific versions of the potential operating environments should be
-    given.  To make the NFR verifiable a statement could be made that the tests
-    from a given section of the VnV plan can be successfully run on all of the
-    possible operating environments.}
+\textbf{Portability} \progname{} shall run on Ubuntu 22.04 LTS (or later).
 
-\item Other NFRs that might be discussed include verifiability,
-  understandability and reusability.
 
 \end{itemize}
 
 \subsection{Rationale}
 
-\plt{Provide a rationale for the decisions made in the documentation.  Rationale
-should be provided for scope decisions, modelling decisions, assumptions and
-typical values.}
+The scope is limited to predicting a single charged particle’s motion in prescribed electric and magnetic fields, because this covers the core educational and analysis use cases (E-only, B-only, and crossed-field) without adding unnecessary complexity. We model the motion in the $x$--$y$ plane with an out-of-plane magnetic field so the physical setup matches common textbook and lab configurations and keeps the required inputs and outputs clear. The detector is represented as a line segment so the “hit point” is unambiguous and easy to interpret.
+
+The modelling decisions and assumptions are chosen to keep the problem solvable and traceable while staying physically meaningful. Fields are treated as piecewise-uniform inside rectangular regions to approximate real devices built from uniform-field components and to make configuration changes explicit at boundaries. Collisions and particle--particle effects are excluded so the trajectory depends only on the Lorentz force, which is the intended focus of the model. Typical values are selected to be realistic for basic demonstrations and to avoid extreme parameter choices that would make numerical integration unstable or require additional physics beyond the current scope.
 
 \section{Likely Changes}    
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the likely changes, with a reference to the related assumption (aref), as appropriate.}
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] Add new a feature such that the software support 3 dimension.
 
 \end{itemize}
 
@@ -1157,9 +1340,7 @@ typical values.}
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the unlikely changes.  The design can assume that the changes listed will
-    not occur.}
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] None
 
 \end{itemize}
 
@@ -1176,101 +1357,125 @@ other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
 general definitions, data definitions, instance models, and likely changes on
 the assumptions.
 
-\plt{You will have to modify these tables for your problem.}
+% \plt{You will have to modify these tables for your problem.}
 
-\plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
-  means that GD1's derivation or presentation requires invocation of A1.  A1
-  does not use GD1.  A1 is ``used by'' GD1.}
+% \plt{The traceability matrix is not generally symmetric.  If GD1 uses A1, that
+%   means that GD1's derivation or presentation requires invocation of A1.  A1
+%   does not use GD1.  A1 is ``used by'' GD1.}
 
-\plt{The traceability matrix is challenging to maintain manually.  Please do
-  your best.  In the future tools (like Drasil) will make this much easier.}
+% \plt{The traceability matrix is challenging to maintain manually.  Please do
+%   your best.  In the future tools (like Drasil) will make this much easier.}
+
 
 \afterpage{
 \begin{landscape}
+\begin{table}[p]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+ & \rotatebox{90}{\tref{TM:velVec}} & \rotatebox{90}{\tref{TM:accVec}} & \rotatebox{90}{\tref{TM:newton2}} &
+ \rotatebox{90}{\tref{TM:lorentzForce}} & \rotatebox{90}{\tref{TM:eqnMotion}} &
+ \rotatebox{90}{\dref{GD_kin2D}} & \rotatebox{90}{\dref{GD_vCrossB2D}} & \rotatebox{90}{\dref{GD_dyn2D}} &
+ \rotatebox{90}{\ddref{DD_qOverm}} & \rotatebox{90}{\ddref{DD_initState}} & \rotatebox{90}{\ddref{DD_EField}} &
+ \rotatebox{90}{\ddref{DD_BField}} & \rotatebox{90}{\ddref{DD_regionRect}} & \rotatebox{90}{\ddref{DD_fieldsByRegion}} &
+ \rotatebox{90}{\ddref{DD_detectorLine}} & \rotatebox{90}{\iref{IM_stateEvol}} & \rotatebox{90}{\iref{IM_detHit}} \\
+\hline
+\tref{TM:velVec}        & & & & & & & & & & & & & & & & & \\ \hline
+\tref{TM:accVec}        & X& & & & & & & & & & & & & & & & \\ \hline
+\tref{TM:newton2}       & & X& & & & & & & & & & & & & & & \\ \hline
+\tref{TM:lorentzForce}  & X& & & & & & & & & & & & & & & & \\ \hline
+\tref{TM:eqnMotion}     & & X& X& X& & & & & & & & & & & & & \\ \hline
+\dref{GD_kin2D}         & X& & & & & & & & & & & & & & & & \\ \hline
+\dref{GD_vCrossB2D}     & & & & & & & & & & & & & & & & & \\ \hline
+\dref{GD_dyn2D}         & & & & & X& & X& & & & & & & & & & \\ \hline
+\ddref{DD_qOverm}       & & & & & & & & & & & & & & & & & \\ \hline
+\ddref{DD_initState}    & & & & & & & & & & & & & & & & & \\ \hline
+\ddref{DD_EField}       & & & & & & & & & & & & & & & & & \\ \hline
+\ddref{DD_BField}       & & & & & & & & & & & & & & & & & \\ \hline
+\ddref{DD_regionRect}   & & & & & & & & & & & & & & & & & \\ \hline
+\ddref{DD_fieldsByRegion}& & & & & & & & & & & X& X& X& & & & \\ \hline
+\ddref{DD_detectorLine} & & & & & & & & & & & & & & & & & \\ \hline
+\iref{IM_stateEvol}     & & & & & X& X& & X& X& X& & & X& X& & & \\ \hline
+\iref{IM_detHit}        & & & & & & & & & & & & & & & X& X& \\ \hline
+\end{tabular}%
+}
+\caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
+\label{Table:trace}
+\end{table}
+\end{landscape}
+}
+
+
 \begin{table}[h!]
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{|l|c|c|}
 \hline
-	& \aref{A_OnlyThermalEnergy}& \aref{A_hcoeff}& \aref{A_mixed}& \aref{A_tpcm}& \aref{A_const_density}& \aref{A_const_C}& \aref{A_Newt_coil}& \aref{A_tcoil}& \aref{A_tlcoil}& \aref{A_Newt_pcm}& \aref{A_charge}& \aref{A_InitTemp}& \aref{A_OpRangePCM}& \aref{A_OpRange}& \aref{A_htank}& \aref{A_int_heat}& \aref{A_vpcm}& \aref{A_PCM_state}& \aref{A_Pressure} \\
+ & \iref{IM_stateEvol} & \iref{IM_detHit} \\
 \hline
-\tref{T_COE}        & X& & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_LHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\dref{NL}           & & X& & & & & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}         & & & X& X& X& X& & & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil}    & & & & & & & X& X& X& & & & & & & & & & \\ \hline
-\ddref{FluxPCM}     & & & X& X& & & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}       & & & & & & & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\iref{ewat}         & & & & & & & & & & & X& X& & X& X& X& & & X \\ \hline
-\iref{epcm}         & & & & & & & & & & & & X& X& & & X& X& X& \\ \hline
-\iref{I_HWAT}       & & & & & & & & & & & & & & X& & & & & X \\ \hline
-\iref{I_HPCM}       & & & & & & & & & & & & & X& & & & & X & \\ \hline
-\lcref{LC_tpcm}     & & & & X& & & & & & & & & & & & & & & \\ \hline
-\lcref{LC_tcoil}    & & & & & & & & X& & & & & & & & & & & \\ \hline
-\lcref{LC_tlcoil}   & & & & & & & & & X& & & & & & & & & & \\ \hline
-\lcref{LC_charge}   & & & & & & & & & & & X& & & & & & & & \\ \hline
-\lcref{LC_InitTemp} & & & & & & & & & & & & X& & & & & & & \\ \hline
-\lcref{LC_htank}    & & & & & & & & & & & & & & & X& & & & \\
-\hline
+\rref{R_inputSpec}     & X & X \\ \hline
+\rref{R_echoInputs}    &   &   \\ \hline
+\rref{R_computeTraj}   & X &   \\ \hline
+\rref{R_detectHit}     & X & X \\ \hline
+\rref{R_reportOutputs} & X & X \\ \hline
 \end{tabular}
+\caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
+\label{Table:R_trace}
+\end{table}
+
+
+\afterpage{
+\begin{landscape}
+\begin{table}[p]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+ & \rotatebox{90}{\aref{A_piecewiseUniform}} & \rotatebox{90}{\aref{A_singleParticle}} &
+ \rotatebox{90}{\aref{A_noInteractions}} & \rotatebox{90}{\aref{A_prescribedFields}} &
+ \rotatebox{90}{\aref{A_twoDMotion}} & \rotatebox{90}{\aref{A_BperpPlane}} &
+ \rotatebox{90}{\aref{A_EaxisAligned}} & \rotatebox{90}{\aref{A_rectRegions}} &
+ \rotatebox{90}{\aref{A_lineDetector}} & \rotatebox{90}{\aref{A_fullDetection}} &
+ \rotatebox{90}{\aref{A_lorentzOnly}} \\
+\hline
+\tref{TM:velVec}        & & & & & & & & & & & \\ \hline
+\tref{TM:accVec}        & & & & & & & & & & & \\ \hline
+\tref{TM:newton2}       & & X& & & & & & & & & \\ \hline
+\tref{TM:lorentzForce}  & & X& & X& & & & & & & \\ \hline
+\tref{TM:eqnMotion}     & & X& & X& & & & & & & X\\ \hline
+\dref{GD_kin2D}         & & & & & X& & & & & & \\ \hline
+\dref{GD_vCrossB2D}     & & & & & X& X& & & & & \\ \hline
+\dref{GD_dyn2D}         & & & & X& X& X& X& & & & \\ \hline
+\ddref{DD_qOverm}       & & & & & & & & & & & \\ \hline
+\ddref{DD_initState}    & & & & & & & & & & & \\ \hline
+\ddref{DD_EField}       & & & & & & & & & & & \\ \hline
+\ddref{DD_BField}       & & & & & & X& & & & & \\ \hline
+\ddref{DD_regionRect}   & & & & & & & & X& & & \\ \hline
+\ddref{DD_fieldsByRegion}& X& & & X& & & & X& & & \\ \hline
+\ddref{DD_detectorLine} & & & & & & & & & X& X& \\ \hline
+\iref{IM_stateEvol}     & X& X& X& X& X& X& X& X& & & X\\ \hline
+\iref{IM_detHit}        & & & & & & & & & X& X& \\ \hline
+\rref{R_inputSpec}      & X& & & X& & & & X& X& X& \\ \hline
+\rref{R_echoInputs}     & & & & & & & & & & & \\ \hline
+\rref{R_computeTraj}    & X& X& X& X& X& X& X& X& & & X\\ \hline
+\rref{R_detectHit}      & & & & & & & & & X& X& \\ \hline
+\rref{R_reportOutputs}  & & & & & & & & & & & \\ \hline
+\lcref{LC_meaningfulLabel}& & & & & X& X& X& & & & \\ \hline
+\end{tabular}%
+}
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
 \label{Table:A_trace}
 \end{table}
 \end{landscape}
 }
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline        
-	& \tref{T_COE}& \tref{T_SHE}& \tref{T_LHE}& \dref{NL}& \dref{ROCT} & \ddref{FluxCoil}& \ddref{FluxPCM} & \ddref{D_HOF}& \ddref{D_MF}& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM} \\
-\hline
-\tref{T_COE}     & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}     & & & X& & & & & & & & & & \\ \hline
-\tref{T_LHE}     & & & & & & & & & & & & & \\ \hline
-\dref{NL}        & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}      & X& & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil} & & & & X& & & & & & & & & \\ \hline
-\ddref{FluxPCM}  & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}    & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}     & & & & & & & & X& & & & & \\ \hline
-\iref{ewat}      & & & & & X& X& X& & & & X& & \\ \hline
-\iref{epcm}      & & & & & X& & X& & X& X& & & X \\ \hline
-\iref{I_HWAT}    & & X& & & & & & & & & & & \\ \hline
-\iref{I_HPCM}    & & X& X& & & & X& X& X& & X& & \\
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
-\label{Table:trace}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\hline
-	& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM}& \ref{sec_DataConstraints}& \rref{R_RawInputs}& \rref{R_MassInputs} \\
-\hline
-\iref{ewat}            & & X& & & & X& X \\ \hline
-\iref{epcm}            & X& & & X& & X& X \\ \hline
-\iref{I_HWAT}          & & & & & & X& X \\ \hline
-\iref{I_HPCM}          & & X& & & & X& X \\ \hline
-\rref{R_RawInputs}     & & & & & & & \\ \hline
-\rref{R_MassInputs}    & & & & & & X& \\ \hline
-\rref{R_CheckInputs}   & & & & & X& & \\ \hline
-\rref{R_OutputInputs}  & X& X& & & & X& X \\ \hline
-\rref{R_TempWater}     & X& & & & & & \\ \hline 
-\rref{R_TempPCM}       & & X& & & & & \\ \hline
-\rref{R_EnergyWater}   & & & X& & & & \\ \hline
-\rref{R_EnergyPCM}     & & & & X& & & \\ \hline
-\rref{R_VerifyOutput}  & & & X& X& & & \\ \hline
-\rref{R_timeMeltBegin} & & X& & & & & \\ \hline
-\rref{R_timeMeltEnd}   & & X& & & & & \\ 
-\hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
-\label{Table:R_trace}
-\end{table}
 
 The purpose of the traceability graphs is also to provide easy references on
 what has to be additionally modified if a certain component is changed.  The
@@ -1279,8 +1484,9 @@ arrow is depended on by the component at the head of that arrow. Therefore, if a
 component is changed, the components that it points to should also be
 changed. Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
 general definitions, data definitions, instance models, likely changes, and
-assumptions on each other. Figure~\ref{Fig_RTrace} shows the dependencies of
-instance models, requirements, and data constraints on each other.
+assumptions on each other. 
+% Figure~\ref{Fig_RTrace} shows the dependencies of
+% instance models, requirements, and data constraints on each other.
 
 % \begin{figure}[h!]
 % 	\begin{center}
@@ -1305,69 +1511,55 @@ instance models, requirements, and data constraints on each other.
 
 \section{Development Plan}
 
-\plt{This section is optional.  It is used to explain the plan for developing
-  the software.  In particular, this section gives a list of the order in which
-  the requirements will be implemented.  In the context of a course  this is
-  where you can indicate which requirements will be implemented as part of the
-  course, and which will be ``faked'' as future work.  This section can be
-  organized as a prioritized list of requirements, or it could should the
-  requirements that will be implemented for ``phase 1'', ``phase 2'', etc.}
-
 \section{Values of Auxiliary Constants}
 
-\plt{Show the values of the symbolic parameters introduced in the report.}
+None
+\newpage
 
-\plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.}
-
-\plt{The value of FRACTION, for the Maintainability NFR would be given here.}
+\bibliographystyle{plainnat}
+\bibliography{../../refs/References}
 
 \newpage
 
-\bibliographystyle {plainnat}
-\bibliography {../../refs/References}
+% \noindent \plt{The following is not part of the template, just some things to consider
+%   when filing in the template.}
 
-\newpage
+% \noindent \plt{Grammar, flow and \LaTeX advice:
+% \begin{itemize}
+% \item For Mac users \texttt{*.DS\_Store} should be in \texttt{.gitignore}
+% \item \LaTeX{} and formatting rules
+% \begin{itemize}
+% \item Variables are italic, everything else not, includes subscripts (link to
+%   document)
+% \begin{itemize}
+% \item \href{https://physics.nist.gov/cuu/pdf/typefaces.pdf}{Conventions}
+% \item Watch out for implied multiplication
+% \end{itemize}
+% \item Use BibTeX
+% \item Use cross-referencing
+% \end{itemize}
+% \item Grammar and writing rules
+% \begin{itemize}
+% \item Acronyms expanded on first usage (not just in table of acronyms)
+% \item ``In order to'' should be ``to''
+% \end{itemize}
+% \end{itemize}}
 
-\noindent \plt{The following is not part of the template, just some things to consider
-  when filing in the template.}
-
-\noindent \plt{Grammar, flow and \LaTeX advice:
-\begin{itemize}
-\item For Mac users \texttt{*.DS\_Store} should be in \texttt{.gitignore}
-\item \LaTeX{} and formatting rules
-\begin{itemize}
-\item Variables are italic, everything else not, includes subscripts (link to
-  document)
-\begin{itemize}
-\item \href{https://physics.nist.gov/cuu/pdf/typefaces.pdf}{Conventions}
-\item Watch out for implied multiplication
-\end{itemize}
-\item Use BibTeX
-\item Use cross-referencing
-\end{itemize}
-\item Grammar and writing rules
-\begin{itemize}
-\item Acronyms expanded on first usage (not just in table of acronyms)
-\item ``In order to'' should be ``to''
-\end{itemize}
-\end{itemize}}
-
-\noindent \plt{Advice on using the template:
-\begin{itemize}
-\item Difference between physical and software constraints
-\item Properties of a correct solution means \emph{additional} properties, not
-  a restating of the requirements (may be ``not applicable'' for your problem).
-  If you have a table of output constraints, then these are properties of a
-  correct solution.
-\item Assumptions have to be invoked somewhere
-\item ``Referenced by'' implies that there is an explicit reference
-\item Think of traceability matrix, list of assumption invocations and list of
-  reference by fields as automatically generatable
-\item If you say the format of the output (plot, table etc), then your
-  requirement could be more abstract
-\end{itemize}
-}
+% \noindent \plt{Advice on using the template:
+% \begin{itemize}
+% \item Difference between physical and software constraints
+% \item Properties of a correct solution means \emph{additional} properties, not
+%   a restating of the requirements (may be ``not applicable'' for your problem).
+%   If you have a table of output constraints, then these are properties of a
+%   correct solution.
+% \item Assumptions have to be invoked somewhere
+% \item ``Referenced by'' implies that there is an explicit reference
+% \item Think of traceability matrix, list of assumption invocations and list of
+%   reference by fields as automatically generatable
+% \item If you say the format of the output (plot, table etc), then your
+%   requirement could be more abstract
+% \end{itemize}
+% }
 
 \newpage{}
 \section*{Appendix --- Reflection}
