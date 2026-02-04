@@ -18,6 +18,7 @@
 \usepackage{caption}
 \usepackage{pdflscape}
 \usepackage{afterpage}
+\usepackage{adjustbox}
 
 \usepackage[round]{natbib}
 
@@ -1368,13 +1369,12 @@ the assumptions.
 
 
 \afterpage{
-\begin{landscape}
 \begin{table}[p]
 \centering
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\resizebox{\textwidth}{!}{%
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\adjustbox{max width=\textwidth}{%
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
  & \rotatebox{90}{\tref{TM:velVec}} & \rotatebox{90}{\tref{TM:accVec}} & \rotatebox{90}{\tref{TM:newton2}} &
@@ -1406,7 +1406,6 @@ the assumptions.
 \caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
 \label{Table:trace}
 \end{table}
-\end{landscape}
 }
 
 
@@ -1430,13 +1429,12 @@ the assumptions.
 
 
 \afterpage{
-\begin{landscape}
 \begin{table}[p]
 \centering
-\scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\resizebox{\textwidth}{!}{%
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\adjustbox{max width=\textwidth}{%
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
  & \rotatebox{90}{\aref{A_piecewiseUniform}} & \rotatebox{90}{\aref{A_singleParticle}} &
@@ -1474,7 +1472,6 @@ the assumptions.
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
 \label{Table:A_trace}
 \end{table}
-\end{landscape}
 }
 
 The purpose of the traceability graphs is also to provide easy references on
