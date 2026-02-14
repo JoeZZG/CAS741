@@ -11,15 +11,22 @@
     urlcolor=blue
 }
 \usepackage[round]{natbib}
+\usepackage{amsmath}
 
-\input{../Comments.text}
-\input{../Common.text}
+% Project-local fallbacks (the original template expects these in the parent folder)
+\providecommand{\wss}[1]{}
+\providecommand{\progname}[1]{#1}
+\providecommand{\authname}{}
+\providecommand{\rref}[1]{R\ref{#1}}
+\providecommand{\nfrref}[1]{NFR\ref{#1}}
+\providecommand{\rref}[1]{R\ref{#1}}
+\providecommand{\nfrref}[1]{NFR\ref{#1}}
 
 \begin{document}
 
-\title{System Verification and Validation Plan for \progname{}} 
-\author{\authname}
-\date{\today}
+\title{System Verification and Validation Plan for \progname{Trajecto}} 
+\author{Zhuo Zhang}
+\date{Feburary 10, 2026}
 	
 \maketitle
 
@@ -30,8 +37,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+Feburary 10, 2026 & 1.0 & Initial draft\\
 \bottomrule
 \end{tabularx}
 
@@ -54,24 +60,24 @@ in.}
 
 \tableofcontents
 
-\listoftables
-\wss{Remove this section if it isn't needed}
+% \listoftables
+% \wss{Remove this section if it isn't needed}
 
-\listoffigures
-\wss{Remove this section if it isn't needed}
+% \listoffigures
+% \wss{Remove this section if it isn't needed}
 
 \newpage
 
 \section{Symbols, Abbreviations, and Acronyms}
-
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{l l} 
-  \toprule		
-  \textbf{symbol} & \textbf{description}\\
-  \midrule 
-  T & Test\\
-  \bottomrule
-\end{tabular}\\
+The Symbols, Abbreviations, and Acronyms are identical to the ones in the SRS of this project.
+% \renewcommand{\arraystretch}{1.2}
+% \begin{tabular}{l l} 
+%   \toprule		
+%   \textbf{symbol} & \textbf{description}\\
+%   \midrule 
+%   T & Test\\
+%   \bottomrule
+% \end{tabular}\\
 
 \wss{symbols, abbreviations, or acronyms --- you can simply reference the SRS
   \citep{SRS} tables, if appropriate}
@@ -82,61 +88,66 @@ in.}
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
-  Verification and Validation plan}
+This document provide an introductory blurb and roadmap of the Trajecto Verification and Validation plan.
 
 \section{General Information}
 
 \subsection{Summary}
 
-\wss{Say what software is being tested.  Give its name and a brief overview of
-  its general functions.}
+Trajecto is a command-line simulator for the motion of a single charged particle
+in prescribed electric and magnetic fields. The user provides the particle
+parameters like mass, charge, location and velocity, a set of rectangular field
+regions with piecewise-constant electric field information and magnetic field
+information, a final time, and a detector line with its position. Trajecto
+computes the time evolution, including position over time and velocity over
+time. It then reports sampled trajectory data and detector information.
 
 \subsection{Objectives}
 
-\wss{State what is intended to be accomplished.  The objective will be around
-  the qualities that are most important for your project.  You might have
-  something like: ``build confidence in the software correctness,''
-  ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
-  just those that are most important.}
+This VnV plan aims to provide practical evidence that \progname{Trajecto} matches
+the SRS, by:
+\begin{itemize}
+  \item checking the SRS is internally consistent from assumptions to models and
+  then requirements;
+  \item verifying the implementation satisfies the functional requirements; and
+  \item evaluating key nonfunctional requirements: accuracy, usability,
+  maintainability, and portability.
+\end{itemize}
 
 \wss{You should also list the objectives that are out of scope.  You don't have 
 the resources to do everything, so what will you be leaving out.  For instance, 
 if you are not going to verify the quality of usability, state this.  It is also 
 worthwhile to justify why the objectives are left out.}
 
-\wss{The objectives are important because they highlight that you are aware of 
-limitations in your resources for verification and validation.  You can't do everything, 
-so what are you going to prioritize?  As an example, if your system depends on an 
-external library, you can explicitly state that you will assume that external library 
-has already been verified by its implementation team.}
+% \wss{The objectives are important because they highlight that you are aware of 
+% limitations in your resources for verification and validation.  You can't do everything, 
+% so what are you going to prioritize?  As an example, if your system depends on an 
+% external library, you can explicitly state that you will assume that external library 
+% has already been verified by its implementation team.}
 
 \subsection{Extras}
 
-\wss{Summarize the extras (if any) that were tackled by this project.  Extras
-can include usability testing, code walkthroughs, user documentation, formal
-proof, GenderMag personas, Design Thinking, etc.  Extras should have already
-been approved by the course instructor as included in your problem statement.
-You can use a pull request to update your extras (in TeamComposition.csv or
-Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+% \wss{Summarize the extras (if any) that were tackled by this project.  Extras
+% can include usability testing, code walkthroughs, user documentation, formal
+% proof, GenderMag personas, Design Thinking, etc.  Extras should have already
+% been approved by the course instructor as included in your problem statement.
+% You can use a pull request to update your extras (in TeamComposition.csv or
+% Repos.csv) if your plan changes as a result of the VnV planning exercise.}
+None 
 
 \subsection{Relevant Documentation}
 
-\wss{Reference relevant documentation.  This will definitely include your SRS
-  and your other project documents (design documents, like MG, MIS, etc).  You
-  can include these even before they are written, since by the time the project
-  is done, they will be written.  You can create BibTeX entries for your
-  documents and within those entries include a hyperlink to the documents.}
+\begin{itemize}
+  \item \textbf{\href{https://joezzg.github.io/CAS741/SRS/SRS.pdf}{Software Requirements Specification (SRS) for Trajecto}.}
 
-\citet{SRS}
+  \item \textbf{Verification and Validation Plan (this document).}
 
-\wss{Don't just list the other documents.  You should explain why they are relevant and 
-how they relate to your VnV efforts.}
+\end{itemize}
+
 
 \section{Plan}
 
-\wss{Introduce this section.  You can provide a roadmap of the sections to
-  come.}
+This section provides a roadmap of the VnV strategies planned for the project.
 
 \subsection{Verification and Validation Team}
 
@@ -144,41 +155,63 @@ how they relate to your VnV efforts.}
   You should do more than list names.  You should say what each person's role is
   for the project's verification.  A table is a good way to summarize this information.}
 
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{p{3.2cm}p{2.6cm}X}
+\toprule
+\textbf{Member} & \textbf{Role} & \textbf{Responsibilities}\\
+\midrule
+Zhuo Zhang & Developer & Create the VnV Plan and execute the plan based on feedback.\\
+Dr.\ Spencer Smith & Supervisor & Provide feedback on the VnV Plan and its execution.\\
+Dr.\ Jacques Carette & Supervisor & Provide feedback on high-level concepts of the project.\\
+Xinlu Yan & Reviewer & Provide feedback on the VnV Plan.\\
+\bottomrule
+\end{tabularx}
+\renewcommand{\arraystretch}{1.0}
+
 \subsection{SRS Verification}
 
-\wss{List any approaches you intend to use for SRS verification.  This may
-  include ad hoc feedback from reviewers, like your classmates (like your
-  primary reviewer), or you may plan for something more rigorous/systematic.}
-
-\wss{If you have a supervisor for the project, you shouldn't just say they will
-read over the SRS.  You should explain your structured approach to the review.
-Will you have a meeting?  What will you present?  What questions will you ask?
-Will you give them instructions for a task-based inspection?  Will you use your
-issue tracker?}
-
-\wss{Maybe create an SRS checklist?}
+\begin{itemize}
+  \item \textbf{Structured review:} I will ask peers and instructors to review the SRS based on its checklist.
+  \item \textbf{Traceability check:} I will confirm the chain from Goal to Requirements and the Instance Models is complete.
+  \item \textbf{Consistency check:} Treat any ambiguity as encoding in Drasil.
+  \item \textbf{Issue tracking:} All problem found becomes an issue and is only closed after SRS tests are fixed.
+\end{itemize}
 
 \subsection{Design Verification}
 
-\wss{Plans for design verification}
-
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
+\begin{itemize}
+  \item The design of \progname{Trajecto} will be reviewed to ensure it matches
+  the structure implied by the SRS:
+  \begin{itemize}
+    \item Correct representation of the particle state and
+  detector event logic.
+    \item Support for piecewise field regions and selecting
+  electric field and magnetic field based on the particle location.
+  \end{itemize}
+  \item Any design choice that blocks traceability will be fixed before testing.
+\end{itemize}
 
 \subsection{Verification and Validation Plan Verification}
 
-\wss{The verification and validation plan is an artifact that should also be
-verified.  Techniques for this include review and mutation testing.}
-
-\wss{The review will include reviews by your classmates}
-
-\wss{Create a checklists?}
+The VnV plan will be reviewed by peers and instructors for:
+\begin{itemize}
+  \item coverage of all functional requirements and nonfunctional requirements.
+  \item feasibility that tests are runnable in course time.
+  \item clarity that inputs, expected results, and pass criteria are explicit.
+\end{itemize}
+Feedback will be recorded and used to update the plan iteratively until the
+program is directly executable.
 
 \subsection{Implementation Verification}
 
-\wss{You should at least point to the tests listed in this document and the unit
-  testing plan.}
+Implementation verification will proceed in the following steps:
+\begin{enumerate}
+  \item Implement the core ODE of IM1 to generate reference outputs for key scenarios as a baseline.
+  \item Produce the main Drasil-generated implementation that reads inputs, validates constraints, computes trajectories, and detects hits (IM2).
+  \item For identical inputs, compare \progname{Trajecto} outputs to the baseline.
+  \item Build system tests that cover all functional requirements and nonfunctional requirements.
+  \item Analyze differences between actual outputs and expected outputs, and refine the program accordingly.
+\end{enumerate}
 
 \wss{In this section you would also give any details of any plans for static
   verification of the implementation.  Potential techniques include code
@@ -190,26 +223,32 @@ CAS741) for a partial usability survey.}
 
 \subsection{Automated Testing and Verification Tools}
 
-\wss{What tools are you using for automated testing.  Likely a unit testing
-  framework and maybe a profiling tool, like ValGrind.  Other possible tools
-  include a static analyzer, make, continuous integration tools, test coverage
-  tools, etc.  Explain your plans for summarizing code coverage metrics.
-  Linters are another important class of tools.  For the programming language
-  you select, you should look at the available linters.  There may also be tools
-  that verify that coding standards have been respected, like flake9 for
-  Python.}
-
-\wss{If you have already done this in the development plan, you can point to
-that document.}
-
-\wss{The details of this section will likely evolve as you get closer to the
-  implementation.}
+\begin{itemize}
+  \item \progname{Trajecto} will be generated from the Drasil artifacts; the
+  generated documentation is treated as part of the evidence trail.
+  \item A Python script will run \progname{Trajecto} on fixed test inputs and
+  collect the resulting outputs.
+  \item The script will parse \progname{Trajecto}'s outputs and check key
+  values against expected results.
+  \item All test inputs and expected outputs will be tracked so that tests can
+  be re-run after any changes.
+\end{itemize}
 
 \subsection{Software Validation}
 
-\wss{If there is any external data that can be used for validation, you should
-  point to it here.  If there are no plans for validation, you should state that
-  here.}
+Trajecto is validated by checking whether its outputs match a credible reference
+behaviour consistent with the SRS.  We will validate the simulator through:
+\begin{itemize}
+  \item \textbf{Analytic validation:} for scenarios where a closed-form solution
+  exists, compare the reported trajectory and detector-hit results to the
+  analytic solution.
+  \item \textbf{Physics-based validation:} check that known physical properties
+  (e.g., invariants or qualitative behaviours expected under the prescribed
+  fields) hold for representative inputs.
+  \item \textbf{User-level validation:} confirm that a typical user can run a
+  provided example and correctly interpret the reported trajectory data and
+  detector-hit result.
+\end{itemize}
 
 \wss{You might want to use review sessions with the stakeholder to check that
 the requirements document captures the right requirements.  Maybe task based
@@ -224,7 +263,7 @@ The feedback from your supervisor will be very useful for improving your project
 as a Rev 0 demo for the supervisor.}
 
 \wss{This section might reference back to the SRS verification section.}
-
+\newpage
 \section{System Tests}
 
 \wss{There should be text between all headings, even if it is just a roadmap of
@@ -235,120 +274,436 @@ the contents of the subsections.}
 \wss{Subsets of the tests may be in related, so this section is divided into
   different areas.  If there are no identifiable subsets for the tests, this
   level of document structure can be removed.}
+This section covers an end-to-end roadmap to test the Functional Requirements of the project.
 
 \wss{Include a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.}
 
-\subsubsection{Area of Testing1}
+\subsubsection{Input specification + echoing inputs}
+
+\begin{enumerate}
+
+\item{T-FR-1\\}
+
+Control: Automatic\\
+
+Initial State:
+\begin{itemize}
+  \item Clean working directory (no prior outputs).
+\end{itemize}
+
+Input:
+\begin{itemize}
+  \item Particle: $m = 1.0$, $q = 1.0$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(2,1)$.
+  \item Region: $R_1 = [0,2]\times[-1,2]$.
+  \item Fields: $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$.
+  \item Detector: $x_{\mathrm{det}}=1$, $y\in[-1,2]$.
+  \item $t_{\text{final}}=1.0$.
+\end{itemize}
+
+Output:
+\begin{itemize}
+  \item The program echoes the full input specification used for the run (all numeric values and region/field/detector definitions).
+  \item No input-constraint errors are reported (satisfies $m>0$, $q\neq 0$, $t_{\text{final}}>0$, valid rectangle, valid detector segment).
+\end{itemize}
+
+Test Case Derivation:
+\begin{itemize}
+  \item Field-free motion is the simplest valid setup. 
+  \item It isolates input parsing and echoing.
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+    \item Run Trajecto with the inputs above.
+  \item Check the echoed input block matches the provided values.
+\end{itemize}
+
+\end{enumerate}
+
+\subsubsection{Field-free analytic trajectory + detector hit}
+
+\begin{enumerate}
+
+\item{T-FR-2\\}
+
+Control: Automatic\\
+
+Initial State:
+\begin{itemize}
+  \item Clean working directory (no prior outputs).
+\end{itemize}
+
+Input:
+\begin{itemize}
+  \item Same inputs as T-FR-1:
+  $m = 1.0$, $q = 1.0$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(2,1)$,
+  $R_1 = [0,2]\times[-1,2]$,
+  $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$,
+  detector $x_{\mathrm{det}}=1$, $y\in[-1,2]$,
+  $t_{\text{final}}=1.0$.
+\end{itemize}
+
+Output:
+\begin{itemize}
+  \item Trajectory:
+  \[
+    x(t)=x_0+v_{0x}t=2t,\quad y(t)=y_0+v_{0y}t=t,
+  \]
+  \[
+    v_x(t)=2,\quad v_y(t)=1.
+  \]
+  \item Detector hit occurs at
+  \[
+    t_{\mathrm{hit}} = 0.5,\quad (x_{\mathrm{hit}},y_{\mathrm{hit}})=(1,0.5).
+  \]
+  \item Output includes sampled trajectory data and detector results when a hit occurs.
+\end{itemize}
+
+Test Case Derivation:
+\begin{itemize}
+  \item With $\mathbf{E}=\mathbf{0}$ and $\mathbf{B}=\mathbf{0}$, $\frac{d\mathbf{v}}{dt}=\mathbf{0}$, so velocity is constant and position is linear.
+  \item The detector hit time follows from $x(t)=x_{\mathrm{det}}$.
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Run Trajecto.
+  \item Parse the reported samples and compute max error against the analytic formulas.
+  \item Check the reported $(t_{\mathrm{hit}}, x_{\mathrm{hit}}, y_{\mathrm{hit}})$ against expected values.
+\end{itemize}
+
+\end{enumerate}
+
+\subsubsection{Detector-hit logic }
+
+\begin{enumerate}
+
+\item{T-FR-3\\}
+
+Control: Automatic\\
+
+Initial State:
+\begin{itemize}
+  \item Clean working directory (no prior outputs).
+\end{itemize}
+
+Input:
+\begin{itemize}
+  \item Particle: $m=1$, $q=1$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(1,0)$.
+  \item Region: $R_1=[-2,2]\times[-2,2]$.
+  \item Fields: $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,1\rangle$ (i.e., $B=1$).
+  \item Detector: choose a detector unlikely to be reached during the simulated time,
+  e.g., $x_{\mathrm{det}}=2$, $y\in[-0.5,0.5]$.
+  \item $t_{\text{final}}=1.0$.
+\end{itemize}
+
+Output:
+\begin{itemize}
+  \item Speed invariantfor all sampled points:
+  \[
+    v_x(t)^2+v_y(t)^2 = v_0^2 = 1.
+  \]
+  \item The program reports that no detector hit occurs within $[0,t_{\text{final}}]$.
+  \item The program still outputs sampled trajectory data.
+\end{itemize}
+
+Test Case Derivation:
+\begin{itemize}
+  \item With $\mathbf{E}=\mathbf{0}$, the Lorentz force is perpendicular to velocity, so speed is conserved.
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Run Trajecto and extract $v_x, v_y$ from trajectory samples.
+  \item Compute $v_x^2+v_y^2$ and confirm it stays constant within tolerance.
+  \item Confirm the detector-output section indicates no hit.
+\end{itemize}
+
+\end{enumerate}
 
 \wss{It would be nice to have a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.  If a section
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
 		
-\paragraph{Title for Test}
-
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs.  Output is not how you
-are going to return the results of the test.  The output is the expected
-result.}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-					
-How test will be performed: 
-					
-\item{test-id2\\}
-
-Control: Manual versus Automatic
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
-
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
-
-How test will be performed: 
-
-\end{enumerate}
-
-\subsubsection{Area of Testing2}
-
-...
 
 \subsection{Tests for Nonfunctional Requirements}
 
-\wss{The nonfunctional requirements for accuracy will likely just reference the
-  appropriate functional tests from above.  The test cases should mention
-  reporting the relative error for these tests.  Not all projects will
-  necessarily have nonfunctional requirements related to accuracy.}
+\subsubsection{Accuracy}
 
-\wss{For some nonfunctional tests, you won't be setting a target threshold for
-passing the test, but rather describing the experiment you will do to measure
-the quality for different inputs.  For instance, you could measure speed versus
-the problem size.  The output of the test isn't pass/fail, but rather a summary
-table or graph.}
-
-\wss{Tests related to usability could include conducting a usability test and
-  survey.  The survey will be in the Appendix.}
-
-\wss{Static tests, review, inspections, and walkthroughs, will not follow the
-format for the tests given below.}
-
-\wss{If you introduce static tests in your plan, you need to provide details.
-How will they be done?  In cases like code (or document) walkthroughs, who will
-be involved? Be specific.}
-
-\subsubsection{Area of Testing1}
-		
-\paragraph{Title for Test}
+\paragraph{Analytic baseline accuracy (field-free)}
 
 \begin{enumerate}
 
-\item{test-id1\\}
+\item{NFR-ACC-1\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+Type: Dynamic, Automatic\\
 
-Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+Initial State:
+\begin{itemize}
+  \item Trajecto is runnable.
+  \item Clean working directory (no prior outputs).
+\end{itemize}
+
+Input/Condition:
+\begin{itemize}
+  \item Re-run the field-free analytic scenario from functional test T-FR-2:
+  $m = 1.0$, $q = 1.0$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(2,1)$,
+  $R_1 = [0,2]\times[-1,2]$,
+  $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$,
+  detector $x_{\mathrm{det}}=1$, $y\in[-1,2]$,
+  $t_{\text{final}}=1.0$.
+  \item Use a fixed step size $h$ (or fixed sampling interval) if required by the CLI.
+\end{itemize}
+
+Output/Result:
+\begin{itemize}
+  \item Compute error versus analytic truth:
+  \[
+    x(t)=2t,\quad y(t)=t,\quad v_x(t)=2,\quad v_y(t)=1.
+  \]
+  \item Detector truth:
+  \[
+    t_{\mathrm{hit}} = 0.5,\quad (x_{\mathrm{hit}},y_{\mathrm{hit}})=(1,0.5).
+  \]
+  \item Acceptance criteria:
+  \begin{itemize}
+    \item Max position error $\le 5h\cdot \max(|v_x|,|v_y|)$.
+    \item Max velocity error is near zero; require $\max(|v_x-2|,|v_y-1|)\le 10^{-3}$.
+    \item Hit time and hit location errors $\le h$.
+  \end{itemize}
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Run Trajecto, parse the reported samples and hit report.
+  \item Compute max absolute errors and compare to acceptance criteria.
+\end{itemize}
 
 \end{enumerate}
 
-\subsubsection{Area of Testing2}
+\paragraph{Physics-invariant accuracy (B-only speed conservation)}
 
-...
+\begin{enumerate}
+
+\item{NFR-ACC-2\\}
+
+Type: Dynamic, Automatic\\
+
+Initial State:
+\begin{itemize}
+  \item Trajecto is runnable.
+  \item Clean working directory.
+\end{itemize}
+
+Input/Condition:
+\begin{itemize}
+  \item Re-run the B-only scenario from functional test T-FR-3:
+  $m=1$, $q=1$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(1,0)$,
+  $R_1=[-2,2]\times[-2,2]$,
+  $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,1\rangle$,
+  $t_{\text{final}}=1.0$.
+\end{itemize}
+
+Output/Result:
+\begin{itemize}
+  \item Speed-squared $S(t_i)=v_x(t_i)^2+v_y(t_i)^2$ remains approximately constant for a small $t_i$.
+  \item Acceptance criteria: relative drift
+  \[
+    \frac{\max_i |S(t_i)-S(t_0)|}{S(t_0)} \le 1\%.
+  \]
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Run Trajecto and extract $(v_x,v_y)$ from trajectory samples.
+  \item Compute $S(t_i)$ and verify drift threshold.
+\end{itemize}
+
+\end{enumerate}
+
+
+\subsubsection{Usability}
+
+\paragraph{Task-based usability run}
+
+\begin{enumerate}
+
+\item{NFR-USE-1\\}
+
+Type: Dynamic, Manual\\
+
+Initial State:
+\begin{itemize}
+  \item Trajecto installed and executable from a terminal.
+\end{itemize}
+
+Input/Condition:
+\begin{itemize}
+  \item Provide a one-page instruction sheet that includes:
+  \begin{itemize}
+    \item one example command (use the same scenario as T-FR-2),
+    \item a brief explanation of where to find: echoed inputs, trajectory samples, detector summary,
+    \item meanings of key fields: $t$, $x,y$, $v_x,v_y$, $t_{\mathrm{hit}}$, $(x_{\mathrm{hit}},y_{\mathrm{hit}})$.
+  \end{itemize}
+\end{itemize}
+
+Output/Result:
+\begin{itemize}
+  \item User successfully executes the example without instructor intervention.
+  \item User correctly identifies:
+  \begin{itemize}
+    \item the input specification used for the run (from the echo output),
+    \item whether a detector hit occurred and the reported $(t_{\mathrm{hit}},x_{\mathrm{hit}},y_{\mathrm{hit}})$,
+    \item where the sampled trajectory data is located.
+  \end{itemize}
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Observe the user running the test and record pass/fail on the three checklist items above.
+\end{itemize}
+
+\end{enumerate}
+
+\paragraph{Input-error feedback quality}
+
+\begin{enumerate}
+
+\item{NFR-USE-2\\}
+
+Type: Dynamic, Manual\\
+
+Initial State:
+\begin{itemize}
+  \item Trajecto runnable.
+\end{itemize}
+
+Input/Condition:
+\begin{itemize}
+  \item Run with one invalid input (choose exactly one):
+  \begin{itemize}
+    \item $m \le 0$, or
+    \item $t_{\text{final}} \le 0$, or
+    \item degenerate rectangle: $x_{\min} \ge x_{\max}$ (or $y_{\min}\ge y_{\max}$).
+  \end{itemize}
+\end{itemize}
+
+Output/Result:
+\begin{itemize}
+  \item Program rejects the run and prints a clear, actionable error message that:
+  \begin{itemize}
+    \item names the invalid parameter, and
+    \item states the expected constraint of them.
+  \end{itemize}
+  \item No misleading trajectory/detector outputs are produced for the invalid run.
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Execute the invalid-input run and inspect the error message and program behavior.
+\end{itemize}
+
+\end{enumerate}
+
+
+\subsubsection{Maintainability}
+
+
+\begin{enumerate}
+
+\item{NFR-MAINT-1\\}
+
+Type: Static, Manual\\
+
+Initial State:
+\begin{itemize}
+  \item Baseline repository and documents are available.
+  \item Original development effort is recorded.
+\end{itemize}
+
+Input/Condition:
+\begin{itemize}
+  \item Apply likely change LC1: ``Add new a feature such that the software support 3 dimension.''
+\end{itemize}
+
+Output/Result:
+\begin{itemize}
+  \item Impact analysis identifies affected artifacts (minimum):
+  \begin{itemize}
+    \item SRS: assumptions/models/data definitions/instance models,
+    \item implementation: state representation, integrator, region logic, detector model,
+    \item test suite: update/add system tests and unit tests.
+  \end{itemize}
+  \item Pass criterion: estimated LC1 effort $< 0.25$ of original development effort.
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Create a short impact table (artifact $\rightarrow$ expected modifications).
+  \item Produce an effort estimate and compute the ratio versus baseline effort.
+\end{itemize}
+
+\end{enumerate}
+
+
+\subsubsection{Portability}
+
+\begin{enumerate}
+
+\item{NFR-PORT-1\\}
+
+Type: Dynamic, Manual\\
+
+Initial State:
+\begin{itemize}
+  \item Fresh Ubuntu 22.04 LTS (or later).
+\end{itemize}
+
+Input/Condition:
+\begin{itemize}
+  \item Follow the documented build/install instructions.
+  \item Run the field-free scenario from T-FR-2 as a smoke test.
+\end{itemize}
+
+Output/Result:
+\begin{itemize}
+  \item The software builds and runs successfully on Ubuntu 22.04 LTS (or later).
+  \item The run produces the expected output echoed inputs, sampled trajectory, and detector summary.
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Record OS version and dependency versions.
+  \item Save build logs and the produced outputs as evidence.
+\end{itemize}
+
+\end{enumerate}
 
 \subsection{Traceability Between Test Cases and Requirements}
 
-\wss{Provide a table that shows which test cases are supporting which
-  requirements.}
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{l p{0.72\textwidth}}
+\toprule
+\textbf{Requir.} & \textbf{Test Cases} \\
+\midrule
+R1  & T-FR-1, T-FR-2, T-FR-3 \\
+R2  & T-FR-1 \\
+R3  & T-FR-2, T-FR-3 \\
+R4  & T-FR-2 \\
+R5  & T-FR-2 \\
+\midrule
+NFR1 (Accuracy)         & NFR-ACC-1, NFR-ACC-2 \\
+NFR2 (Usability)        & NFR-USE-1, NFR-USE-2 \\
+NFR3 (Maintainability)  & NFR-MAINT-1 \\
+NFR4 (Portability)      & NFR-PORT-1 \\
+\bottomrule
+\end{tabular}
+\label{Table:ReqTrace}
+\end{table}
 
 \section{Unit Test Description}
 
@@ -376,100 +731,100 @@ needs to be well-documented, with meaningful names for all of the tests.}
 
 \subsection{Tests for Functional Requirements}
 
-\wss{Most of the verification will be through automated unit testing.  If
-  appropriate specific modules can be verified by a non-testing based
-  technique.  That can also be documented in this section.}
+% \wss{Most of the verification will be through automated unit testing.  If
+%   appropriate specific modules can be verified by a non-testing based
+%   technique.  That can also be documented in this section.}
 
-\subsubsection{Module 1}
+% \subsubsection{Module 1}
 
-\wss{Include a blurb here to explain why the subsections below cover the module.
-  References to the MIS would be good.  You will want tests from a black box
-  perspective and from a white box perspective.  Explain to the reader how the
-  tests were selected.}
+% \wss{Include a blurb here to explain why the subsections below cover the module.
+%   References to the MIS would be good.  You will want tests from a black box
+%   perspective and from a white box perspective.  Explain to the reader how the
+%   tests were selected.}
 
-\begin{enumerate}
+% \begin{enumerate}
 
-\item{test-id1\\}
+% \item{test-id1\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-Initial State: 
+% Initial State: 
 					
-Input: 
+% Input: 
 					
-Output: \wss{The expected result for the given inputs}
+% Output: \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+% Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+% How test will be performed: 
 					
-\item{test-id2\\}
+% \item{test-id2\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-Initial State: 
+% Initial State: 
 					
-Input: 
+% Input: 
 					
-Output: \wss{The expected result for the given inputs}
+% Output: \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+% Test Case Derivation: \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+% How test will be performed: 
 
-\item{...\\}
+% \item{...\\}
     
-\end{enumerate}
+% \end{enumerate}
 
-\subsubsection{Module 2}
+% \subsubsection{Module 2}
 
-...
+% ...
 
-\subsection{Tests for Nonfunctional Requirements}
+% \subsection{Tests for Nonfunctional Requirements}
 
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
+% \wss{If there is a module that needs to be independently assessed for
+%   performance, those test cases can go here.  In some projects, planning for
+%   nonfunctional tests of units will not be that relevant.}
 
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
+% \wss{These tests may involve collecting performance data from previously
+%   mentioned functional tests.}
 
-\subsubsection{Module ?}
+% \subsubsection{Module ?}
 		
-\begin{enumerate}
+% \begin{enumerate}
 
-\item{test-id1\\}
+% \item{test-id1\\}
 
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
+% Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
+%   be automatic}
 					
-Initial State: 
+% Initial State: 
 					
-Input/Condition: 
+% Input/Condition: 
 					
-Output/Result: 
+% Output/Result: 
 					
-How test will be performed: 
+% How test will be performed: 
 					
-\item{test-id2\\}
+% \item{test-id2\\}
 
-Type: Functional, Dynamic, Manual, Static etc.
+% Type: Functional, Dynamic, Manual, Static etc.
 					
-Initial State: 
+% Initial State: 
 					
-Input: 
+% Input: 
 					
-Output: 
+% Output: 
 					
-How test will be performed: 
+% How test will be performed: 
 
-\end{enumerate}
+% \end{enumerate}
 
-\subsubsection{Module ?}
+% \subsubsection{Module ?}
 
-...
+% ...
 
 \subsection{Traceability Between Test Cases and Modules}
 
@@ -477,46 +832,54 @@ How test will be performed:
 				
 \bibliographystyle{plainnat}
 
-\bibliography{../../refs/References}
+% Project-local bibliography (since ../../refs/References is not included in this Prism project)
+\begin{thebibliography}{9}
+\bibitem[Zhang(2026)]{SRS}
+Z.~Zhang.
+\emph{Software Requirements Specification (SRS) for Trajecto}.
+2026.
+\href{https://joezzg.github.io/CAS741/SRS/SRS.pdf}{https://joezzg.github.io/CAS741/SRS/SRS.pdf}.
+\end{thebibliography}
 
-\newpage
+% \newpage
 
-\section{Appendix}
+% \section{Appendix}
 
-This is where you can place additional information.
+% % This is where you can place additional information.
 
-\subsection{Symbolic Parameters}
+% \subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+% % The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
+% % Their values are defined in this section for easy maintenance.
 
-\subsection{Usability Survey Questions?}
+% \subsection{Usability Survey Questions?}
 
-\wss{This is a section that would be appropriate for some projects.}
+% \wss{This is a section that would be appropriate for some projects.}
 
-\newpage{}
-\section*{Appendix --- Reflection}
+% \newpage{}
+% \section*{Appendix --- Reflection}
 
-\wss{This section is not required for CAS 741}
+% \wss{This section is not required for CAS 741}
 
-The information in this section will be used to evaluate the team members on the
-graduate attribute of Lifelong Learning.
+% The information in this section will be used to evaluate the team members on the
+% graduate attribute of Lifelong Learning.
 
-\input{../Reflection.text}
+% % Template expects Reflection.text in the parent folder; omit if not available.
+% % \input{../Reflection.text}
 
-\begin{enumerate}
-  \item What went well while writing this deliverable? 
-  \item What pain points did you experience during this deliverable, and how
-    did you resolve them?
-  \item What knowledge and skills will the team collectively need to acquire to
-  successfully complete the verification and validation of your project?
-  Examples of possible knowledge and skills include dynamic testing knowledge,
-  static testing knowledge, specific tool usage, Valgrind etc.  You should look to
-  identify at least one item for each team member.
-  \item For each of the knowledge areas and skills identified in the previous
-  question, what are at least two approaches to acquiring the knowledge or
-  mastering the skill?  Of the identified approaches, which will each team
-  member pursue, and why did they make this choice?
-\end{enumerate}
+% \begin{enumerate}
+%   \item What went well while writing this deliverable? 
+%   \item What pain points did you experience during this deliverable, and how
+%     did you resolve them?
+%   \item What knowledge and skills will the team collectively need to acquire to
+%   successfully complete the verification and validation of your project?
+%   Examples of possible knowledge and skills include dynamic testing knowledge,
+%   static testing knowledge, specific tool usage, Valgrind etc.  You should look to
+%   identify at least one item for each team member.
+%   \item For each of the knowledge areas and skills identified in the previous
+%   question, what are at least two approaches to acquiring the knowledge or
+%   mastering the skill?  Of the identified approaches, which will each team
+%   member pursue, and why did they make this choice?
+% \end{enumerate}
 
 \end{document}
