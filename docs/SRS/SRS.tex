@@ -19,6 +19,7 @@
 \usepackage{pdflscape}
 \usepackage{afterpage}
 \usepackage{adjustbox}
+\usepackage{tikz}
 
 \usepackage[round]{natbib}
 
@@ -78,6 +79,8 @@
 \newcounter{lcnum} %Likely change number
 \newcommand{\lthelcnum}{LC\thelcnum}
 \newcommand{\lcref}[1]{LC\ref{#1}}
+\newcounter{ucnum} %Unlikely change number
+\newcommand{\ucref}[1]{UC\ref{#1}}
 
 \usepackage{fullpage}
 
@@ -129,7 +132,7 @@
 
 \begin{document}
 
-\title{Software Requirements Specification for Charged Particle Trajectory Simulator}
+\title{Software Requirements Specification for \progname{}}
 \author{Zhuo Zhang}
 \date{January 23, 2026}
 
@@ -149,6 +152,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 January 23, 2026 & 1.0 & Initial release\\
+March 10, 2026 & 1.1 & Update from feedback\\
 \bottomrule
 \end{tabularx}
 
@@ -254,7 +258,64 @@ $\mathbf{x}_{\text{hit}}$ & \unit[per-mode=symbol]{\metre} & impact position on 
 
 \pagenumbering{arabic}
 
-  
+\section{Introduction}
+
+Predicting the trajectory of a charged particle through piecewise-uniform
+electromagnetic fields is a fundamental problem in accelerator and plasma physics.
+Therefore, it is useful to have a program to simulate particle motion, model the
+field-region-by-region deflection, and detect particle impacts on a detector line.
+The document describes the program called \progname{}.
+
+The following section provides an overview of the Software Requirements
+Specification (SRS) for \progname{}.  This section explains the purpose of this
+document, the scope of the requirements, the characteristics of the intended reader,
+and the organization of the document.
+
+\subsection{Purpose of Document}
+
+The primary purpose of this document is to record the requirements of \progname{}.
+Goals, assumptions, theoretical models, definitions, and other model derivation
+information are specified, allowing the reader to fully understand and verify the
+purpose and scientific basis of \progname{}.  With the exception of system
+constraints, this SRS will remain abstract, describing what problem is being solved,
+but not how to solve it.
+
+This document will be used as a starting point for subsequent development phases,
+including writing the design specification and the software verification and
+validation plan.  The design document will show how the requirements are to be
+realized, including decisions on the numerical algorithms and programming
+environment.  The verification and validation plan will show the steps that will be
+used to increase confidence in the software documentation and the implementation.
+Although the SRS fits in a series of documents that follow the so-called waterfall
+model, the actual development process is not constrained in any way.  Even when the
+waterfall model is not followed, as Parnas and Clements point out
+\cite{ParnasAndClements1986}, the most logical way to present the documentation is
+still to ``fake'' a rational design process.
+
+\subsection{Scope of Requirements}
+
+The scope of the requirements includes the simulation of a single charged particle
+under piecewise-uniform electromagnetic fields in two dimensions, and the detection
+of the particle impact on a specified detector line.
+
+\subsection{Characteristics of Intended Reader} \label{SecIntendedReader}
+
+Reviewers of this documentation should have an understanding of
+undergraduate-level physics (including classical mechanics and electromagnetism),
+calculus, and ordinary differential equations.  The users of \progname{} can have
+a lower level of expertise, as explained in Sec.~\ref{SecUserCharacteristics}.
+
+\subsection{Organization of Document}
+
+The organization of this document follows the template for an SRS for scientific
+computing software proposed by \cite{SmithAndKoothoor2016}, \cite{SmithEtAl2007},
+and \cite{SmithAndLai2005}.  The presentation follows the standard pattern of
+presenting goals, theories, definitions, and assumptions.  For readers that would
+like a more bottom-up approach, they can start reading the instance models and
+trace back to find any additional information they require.
+
+The goal statements are refined to the theoretical models and the theoretical
+models to the instance models.
 
 \section{General System Description}
 
@@ -306,12 +367,14 @@ responsibilities of the user and the system are as follows:
 
 \subsection{User Characteristics} \label{SecUserCharacteristics}
 
-The end user of \progname{} should have an understanding of high school physics and high school
-calculus.
+The end user of \progname{} should have an understanding of undergraduate-level physics
+(including classical mechanics and introductory electromagnetism) and undergraduate-level
+mathematics (including calculus and ordinary differential equations). Familiarity with
+numerical methods or scientific computing is helpful but not required.
 
-\subsection{System Constraints}
+\subsection{System Constraints} \label{SecSysConstraints}
 
-There are no system constraints.
+\progname{} requires Python~3.10 or later with NumPy, SciPy, and Matplotlib installed.
 
 
 \section{Specific System Description}
@@ -369,9 +432,9 @@ The physical system of \progname{}, as shown in
 Figure~\ref{Fig_PhysicalSystem}, includes the following elements:
 
 \begin{itemize}
-\item[PS1:] The charged particle (with velocity $v_0$. charge $q$ and mass $m$) at initial point $x_0$.
+\item[PS1:] The charged particle (with velocity $\mathbf{v}_0$, charge $q$ and mass $m$) at initial point $\mathbf{x}_0$.
 \item[PS2:] The bounded region of uniform magnetic field $\mathbf{B}$ and electrc field $\mathbf{E}$.
-\item[PS3:] The projectile.
+\item[PS3:] The trajectory: the path traced by the charged particle as it travels through the field regions from $\mathbf{x}_0$ toward the detector plane.
 \item[PS4:] The detector plane.
 \item[PS5:] The impact point $x_{hit}$ on the detector plan.
 \end{itemize}
@@ -380,12 +443,8 @@ Figure~\ref{Fig_PhysicalSystem}, includes the following elements:
 
 \begin{figure}[h!]
 \begin{center}
- \IfFileExists{physical_system.jpg}{%
-  \includegraphics[width=0.9\textwidth]{physical_system.jpg}%
-}{%
-  \fbox{physical_system.jpg}%
-}
-\caption{The physical system}
+  \includegraphics[width=0.85\textwidth]{figure2_multi_region_reversed_B.jpg}
+\caption{The physical system.}
 \label{Fig_PhysicalSystem}
 \end{center}
 \end{figure}
@@ -401,8 +460,7 @@ statements are:
 \begin{itemize}
 
 \item[GS\refstepcounter{goalnum}\thegoalnum \label{G_Trajectory}:]
-Predict the trajectory of a charged particle as it moves through specified
-electric and magnetic field regions.
+Predict the trajectory of a charged particle under prescribed electric and magnetic fields.
 
 \item[GS\refstepcounter{goalnum}\thegoalnum \label{G_DetectorOutcome}:]
 Determine impact position and time-of-flight at a specified detector line.
@@ -471,13 +529,47 @@ models can be verified.
 
 \subsubsection{Types}
 
-% \plt{This section is optional. Defining types can make the document easier to
-% understand.}
+Not Applicable. Data type definitions are provided in Section~\ref{sec_datatypes}.
 
 \subsubsection{Scope Decisions}
 
+\begin{itemize}
+\item \textbf{Two-dimensional motion:} The simulation is restricted to particle motion in the
+  $x$--$y$ plane. Three-dimensional trajectories are outside the current scope and are listed
+  as a likely change (\lcref{LC_3D}). This restriction matches common
+  experimental configurations (e.g., cathode-ray tubes, mass spectrometers) and keeps the
+  input specification and output interpretation straightforward.
+
+\item \textbf{Single charged particle:} Only a single particle is simulated per run. Multi-particle
+  beams and collective effects are out of scope.
+
+\item \textbf{Classical (non-relativistic) dynamics:} Relativistic corrections are excluded.
+  This is valid for particle speeds much less than the speed of light, which is the typical
+  regime for the target educational and exploratory use cases.
+\end{itemize}
+
 \subsubsection{Modelling Decisions}
 
+\begin{itemize}
+\item \textbf{Cartesian coordinate system:} The particle position and velocity are represented in
+  a Cartesian ($x$--$y$) coordinate system. This choice aligns naturally with rectangular
+  field-region boundaries (\aref{A_rectRegions}), simplifies the component form of the equations
+  of motion, and makes numerical implementation straightforward.
+
+\item \textbf{Piecewise-uniform fields:} Electric and magnetic fields are modelled as spatially
+  uniform within each rectangular region (\aref{A_piecewiseUniform}). This approximates real
+  devices built from discrete uniform-field cells (e.g., parallel-plate capacitors, solenoid
+  sections) and makes field specification explicit at region boundaries.
+
+\item \textbf{Lorentz force only:} Particle dynamics are governed solely by the Lorentz force
+  (\aref{A_lorentzOnly}). Gravity, radiation reaction, and other forces are negligible for the
+  target use cases and are excluded to keep the model focused on electromagnetic physics.
+\end{itemize}
+
+\subsubsection{Physical Constants}
+
+Not Applicable. No universal physical constants appear in the governing equations as fixed
+parameters; all field values and particle properties are user-specified inputs.
 
 \subsubsection{Assumptions} \label{sec_assumpt}
 
@@ -491,43 +583,57 @@ change [LC], in which the respective assumption is used.
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_piecewiseUniform}:]
 piecewiseUniform: The electric and magnetic fields are uniform within each field
-region and may change only at region boundaries.
+region and may change only at region boundaries. [\ddref{DD_fieldsByRegion},
+\iref{IM_stateEvol}, \rref{R_inputSpec}, \rref{R_computeTraj}, \lcref{LC_3D}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_singleParticle}:]
 singleParticle: The particle is treated as a point mass and point charge.
+[\tref{TM:newton2}, \tref{TM:lorentzForce}, \tref{TM:eqnMotion}, \iref{IM_stateEvol},
+\rref{R_computeTraj}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_noInteractions}:]
 noInteractions: Collisions and particle--particle interactions (including
-space-charge effects) are neglected.
+space-charge effects) are neglected. [\iref{IM_stateEvol}, \rref{R_computeTraj}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_prescribedFields}:]
 prescribedFields: The electric and magnetic fields are user-specified and remain
-fixed during the simulation.
+fixed during the simulation. [\tref{TM:lorentzForce}, \tref{TM:eqnMotion},
+\dref{GD_dyn2D}, \ddref{DD_fieldsByRegion}, \iref{IM_stateEvol}, \rref{R_inputSpec},
+\rref{R_computeTraj}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_twoDMotion}:]
 twoDMotion: The particle motion is confined to the $x$--$y$ plane.
+[\dref{GD_kin2D}, \dref{GD_vCrossB2D}, \dref{GD_dyn2D}, \iref{IM_stateEvol},
+\rref{R_computeTraj}, \lcref{LC_3D}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_BperpPlane}:]
 BperpPlane: The magnetic field is perpendicular to the $x$--$y$ plane.
+[\dref{GD_vCrossB2D}, \dref{GD_dyn2D}, \ddref{DD_BField}, \iref{IM_stateEvol},
+\rref{R_computeTraj}, \lcref{LC_3D}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_EaxisAligned}:]
 EaxisAligned: The electric field lies in the $x$--$y$ plane and is aligned with a
-coordinate axis.
+coordinate axis. [\dref{GD_dyn2D}, \iref{IM_stateEvol}, \rref{R_computeTraj},
+\lcref{LC_3D}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_rectRegions}:]
 rectRegions: Field-region boundaries are rectangular and parallel to the $x$ and
-$y$ axes.
+$y$ axes. [\ddref{DD_regionRect}, \ddref{DD_fieldsByRegion}, \iref{IM_stateEvol},
+\rref{R_inputSpec}, \rref{R_computeTraj}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_lineDetector}:]
 lineDetector: The detector is modeled as a line located within the field region.
+[\ddref{DD_detectorLine}, \iref{IM_detHit}, \rref{R_inputSpec}, \rref{R_detectHit}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_fullDetection}:]
 fullDetection: The detector line is sufficiently long to record the impact point
 for any trajectory within the scope of the simulation.
+[\ddref{DD_detectorLine}, \iref{IM_detHit}, \rref{R_inputSpec}, \rref{R_detectHit}]
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_lorentzOnly}:]
 lorentzOnly: The particle dynamics are governed only by the Lorentz force; all
-other forces are neglected.
+other forces are neglected. [\tref{TM:eqnMotion}, \iref{IM_stateEvol},
+\rref{R_computeTraj}]
 
 \end{itemize}
 
@@ -627,9 +733,10 @@ on.
   $m\,\dfrac{d\mathbf{v}(t)}{dt} = q\left(\mathbf{E} + \mathbf{v}(t)\times\mathbf{B}\right)$
 }
 {
-  This equation combines Newton's second law with the Lorentz force law to give
-  the governing ordinary differential equation (ODE) for the particle velocity
-  $\mathbf{v}(t)$ under specified electric and magnetic fields.
+  This equation combines \tref{TM:newton2} (Newton's second law) with
+  \tref{TM:lorentzForce} (Lorentz force law), using the definition of acceleration
+  \tref{TM:accVec}, to yield the governing ordinary differential equation (ODE) for
+  the particle velocity $\mathbf{v}(t)$ under the specified electric and magnetic fields.
 }
 {None.}
 {\cite{WikiElectromagnetism}}
@@ -979,7 +1086,7 @@ Label& \bf Detector line\\
 \hline
 Symbol &$L_{\mathrm{det}}$\\
 \hline
-Units & \si{\metre}\\
+Units & $(\si{\metre},\si{\metre})$\\
 \hline
 Equation&
 $L_{\mathrm{det}}=\{(x,y)\ |\ x=x_{\mathrm{det}},\ y\in[y_{\min}^{\mathrm{det}},y_{\max}^{\mathrm{det}}]\}$\\
@@ -998,42 +1105,8 @@ Ref.\ By & \iref{IM_detHit}\\ \hline
 
 \subsubsection{Data Types}\label{sec_datatypes}
 
-% \plt{This section is optional.  In many scientific computing programs it isn't
-%   necessary, since the inputs and outpus are straightforward types, like reals,
-%   integers, and sequences of reals and integers.  However, for some problems it
-%   is very helpful to capture the type information.}
+The standard real-number and vector types used in undergraduate physics and calculus are sufficient; no additional data types need to be defined for this problem.
 
-% \plt{The data types are not derived; they are simply stated and used by other
-%   models.}
-
-% \plt{All data types must be used by at least one of the models.}
-
-% \plt{For the mathematical notation for expressing types, the recommendation is
-%   to use the notation of~\citet{HoffmanAndStrooper1995}.}
-
-This section collects and defines all the data types needed to document the
-% models. \plt{Modify the examples below for your problem, and add additional
-%   definitions as appropriate.}
-
-% ~\newline
-
-% \noindent
-% \begin{minipage}{\textwidth}
-% \renewcommand*{\arraystretch}{1.5}
-% \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-%   \hline
-%   \rowcolor[gray]{0.9}
-%   Type Name & Name for Type\\
-%   \hline
-%   Type Def & mathematical definition of the type\\
-%   \hline
-%   Description & description here
-%   \\
-%   \hline
-%   Sources & Citation here, if the type is borrowed from another source\\
-%   \hline
-% \end{tabular}
-% \end{minipage}\\
 
 \subsubsection{Instance Models} \label{sec_instance}
 
@@ -1076,10 +1149,16 @@ under the assumptions in Section~\ref{sec_assumpt}.
   & with initial condition $\mathbf{s}(0)=\langle x_0,y_0,v_{0x},v_{0y}\rangle$.\\
   \hline
   Description&
-  $\kappa = q/m$ is the charge-to-mass ratio.\\
+  Bold symbols (e.g., $\mathbf{s}$, $\mathbf{E}$, $\mathbf{B}$) denote vectors; the
+  bold state vector $\mathbf{s}(t)=\langle x(t),y(t),v_x(t),v_y(t)\rangle$ collects
+  position and velocity components.\\
+  & $\kappa = q/m$ is the charge-to-mass ratio.\\
   & $(E_x(t),E_y(t))$ and $B(t)$ are determined by which region $R_i$ contains $(x(t),y(t))$:\\
   & if $(x(t),y(t))\in R_i$, then $\mathbf{E}(t)=\mathbf{E}_i=\langle E_x,E_y,0\rangle$
     and $\mathbf{B}(t)=\mathbf{B}_i=\langle 0,0,B\rangle$.\\
+  & If $(x(t),y(t))$ lies outside all defined regions, the fields default to zero
+  ($\mathbf{E}=\mathbf{0}$, $\mathbf{B}=\mathbf{0}$) and the particle undergoes free
+  (force-free) motion in that area.\\
   & The model supports $E$-only, $B$-only, and crossed-field configurations by allowing
   $\mathbf{E}_i=\mathbf{0}$ and/or $\mathbf{B}_i=\mathbf{0}$ in any region.\\
   \hline
@@ -1166,52 +1245,61 @@ column of typical values is intended to provide a feel for a common scenario.
 \begin{table}[!h]
 \caption{Input Data Constraints} \label{TblInputVar}
 \renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l l l}
+\noindent \begin{longtable*}{l l l l l}
   \toprule
-  \textbf{Var} & \textbf{Physical Constraints} & \textbf{Typical Value} & \textbf{Uncert.} \\
+  \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} & \textbf{Typical Value} & \textbf{Uncert.} \\
   \midrule
   $m$ &
   $m > 0$ &
+  $m_{\min} \le m \le m_{\max}$ &
   $9.11\times 10^{-31}\ \si{\kilogram}$ &
   $10\%$
   \\
   $q$ &
   $q \neq 0$ &
+  $|q| \le q_{\max}$ &
   $-1.60\times 10^{-19}\ \si{\coulomb}$ &
   $10\%$
   \\
   $(x_0,y_0)$ &
   $(x_0,y_0)\in R_1$ &
+  Within simulation domain &
   $(0,0)\ \si{\metre}$ &
   $0\%$
   \\
   $v_0$ &
-  $v_0 = \sqrt{v_{0x}^2+v_{0y}^2} > 0$ &
+  $v_0 > 0$ &
+  $v_0 \le v_{\max}$ &
   $1.0\times 10^{6}\ \si{\metre\per\second}$ &
   $10\%$
   \\
   $R_i$ &
-  $x^{(i)}_{\min} < x^{(i)}_{\max}$ and $y^{(i)}_{\min} < y^{(i)}_{\max}$ &
-  $0.10\times 0.10\ \si{\metre\times\metre}$ &
+  $x^{(i)}_{\min} < x^{(i)}_{\max}$,\ $y^{(i)}_{\min} < y^{(i)}_{\max}$ &
+  Non-degenerate rectangle &
+  $0.10\times 0.10\ \si{\metre^2}$ &
   $0\%$
   \\
   $\mathbf{E}_i$ &
-  $\mathbf{E}_i=\langle E_x,E_y,0\rangle$ &
+  Finite real-valued field &
+  $|\mathbf{E}_i| \le E_{\max}$ &
   $1.0\times 10^{3}\ \si{\newton\per\coulomb}$ &
   $10\%$
   \\
   $\mathbf{B}_i$ &
-  $\mathbf{B}_i=\langle 0,0,B\rangle$ &
+  Finite real-valued field &
+  $|B_i| \le B_{\max}$ &
   $1.0\times 10^{-2}\ \si{\tesla}$ &
   $10\%$
   \\
   $L_{\mathrm{det}}$ &
-  $y^{\mathrm{det}}_{\min} < y^{\mathrm{det}}_{\max}$ and $x_{\mathrm{det}}$ is within the modeled domain &
+  $y^{\mathrm{det}}_{\min} < y^{\mathrm{det}}_{\max}$ &
+  $x_{\mathrm{det}}$ within domain &
   $x_{\mathrm{det}} = 0.08\ \si{\metre}$ &
   $0\%$
   \\
   $t_{\text{final}}$ &
   $t_{\text{final}} > 0$ &
+  $t_{\text{final}} \le t_{\max}$ &
   $1.0\times 10^{-6}\ \si{\second}$ &
   $10\%$
   \\
@@ -1253,10 +1341,18 @@ requirements.
 In addition, the following invariants should hold in the corresponding special
 cases:
 \begin{itemize}
-\item If $\mathbf{E}=\mathbf{0}$ in a region (magnetic-only motion), the speed
-  magnitude is constant within that region: $v_x(t)^2 + v_y(t)^2 =$ constant.
-\item If $\mathbf{E}=\mathbf{0}$ and $\mathbf{B}=\mathbf{0}$ in a region (field-free motion),
-  the velocity is constant and the trajectory is a straight line in that region.
+\item \textbf{Energy conservation (magnetic-only):} When $\mathbf{E}=\mathbf{0}$ in a region,
+  the magnetic force $q\mathbf{v}\times\mathbf{B}$ is always perpendicular to $\mathbf{v}$
+  and therefore does no work. The kinetic energy
+  $K = \tfrac{1}{2}m\bigl(v_x(t)^2 + v_y(t)^2\bigr)$
+  must therefore remain constant within that region.
+  Equivalently, the speed magnitude $\|\mathbf{v}(t)\|$ is constant.
+\item \textbf{Energy change (with electric field):} When $\mathbf{E}\neq\mathbf{0}$, the
+  work--energy theorem gives $\Delta K = q\,\mathbf{E}\cdot\Delta\mathbf{x}$, where
+  $\Delta\mathbf{x}$ is the displacement of the particle within the region.
+\item \textbf{Field-free straight-line motion:} If $\mathbf{E}=\mathbf{0}$ and
+  $\mathbf{B}=\mathbf{0}$ in a region, the velocity is constant and the trajectory
+  is a straight line in that region.
 \end{itemize}
 
 % \plt{This section is not for test cases or techniques for verification and
@@ -1289,7 +1385,8 @@ computeTraj: Compute the particle trajectory over time under the specified field
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_detectHit}:]
 detectHit: Detect when the trajectory intersects the detector line and record
-$\mathbf{x}_{\mathrm{hit}}$ and $t_{\mathrm{hit}}$.
+$(x_{\mathrm{hit}}, y_{\mathrm{hit}})$ and $t_{\mathrm{hit}}$ (as defined in
+\iref{IM_detHit}).
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_reportOutputs}:]
 reportOutputs: Output sampled trajectory data and detector results (when a hit occurs).
@@ -1305,35 +1402,100 @@ reportOutputs: Output sampled trajectory data and detector results (when a hit o
 \textbf{Accuracy} The accuracy of the computed trajectory and detector outcomes
 shall be sufficient for educational and exploratory use in introductory
 electromagnetism. The achieved accuracy shall be demonstrated using the
-procedures and acceptance criteria defined in the Verification and Validation
-Plan (VnV).
+procedures and acceptance criteria defined in the
+\href{https://joezzg.github.io/CAS741/VnVPlan/VnVPlan.pdf}{Verification and Validation Plan (VnV)}.
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Usability}:]
 \textbf{Usability} Users consistent with Section~\ref{SecUserCharacteristics}
 shall be able to run the provided example scenarios and interpret the reported
-outputs. Usability shall be assessed following the procedures in the VnV.
+outputs. Usability shall be assessed following the procedures in the
+\href{https://joezzg.github.io/CAS741/VnVPlan/VnVPlan.pdf}{VnV Plan}.
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Maintainability}:]
 \textbf{Maintainability} The effort required to implement any likely change shall be
 less than 0.25 of the original development effort.
 
 \item[NFR\refstepcounter{nfrnum}\thenfrnum \label{NFR_Portability}:]
-\textbf{Portability} \progname{} shall run on Ubuntu 22.04 LTS (or later).
+\textbf{Portability} \progname{} shall run on macOS.
 
 
 \end{itemize}
 
+\subsection{Requirements for Verification} \label{SecReqVerification}
+
+The simulation results shall be verifiable through the following means:
+
+\begin{itemize}
+\item \textbf{Analytical comparison:} In cases where a closed-form solution
+  exists (e.g., circular motion in a uniform magnetic field, straight-line motion
+  in a uniform electric field), the numerical solution shall agree with the
+  analytical result within the accuracy tolerance of \nfrref{NFR_Accuracy}.
+\item \textbf{Energy invariant:} In magnetic-only regions the kinetic energy shall
+  remain constant within the numerical tolerance (see
+  Section~\ref{sec_CorrectSolution}).
+\item \textbf{VnV test suite:} Unit and integration tests defined in the
+  \href{../../VnVPlan/VnVPlan.pdf}{Verification and Validation Plan} shall pass.
+\end{itemize}
+
 \subsection{Rationale}
 
-The scope is limited to predicting a single charged particle’s motion in prescribed electric and magnetic fields, because this covers the core educational and analysis use cases (E-only, B-only, and crossed-field) without adding unnecessary complexity. We model the motion in the $x$--$y$ plane with an out-of-plane magnetic field so the physical setup matches common textbook and lab configurations and keeps the required inputs and outputs clear. The detector is represented as a line segment so the “hit point” is unambiguous and easy to interpret.
+\subsubsection*{Scope Decisions}
+\begin{description}
+\item[\textbf{2D motion only (\aref{A_twoDMotion}):}]
+  Restricting particle motion to the $x$--$y$ plane keeps the problem tractable and
+  matches common experimental setups (cathode-ray tube, mass spectrometer). Extension
+  to 3D is listed as a likely change (\lcref{LC_3D}).
+\item[\textbf{Single particle (\aref{A_singleParticle}, \aref{A_noInteractions}):}]
+  Simulating a single point charge without inter-particle interactions covers the core
+  educational and analytical use cases without requiring many-body physics.
+\item[\textbf{Classical dynamics:}]
+  Relativistic effects are excluded because all target scenarios involve particle speeds
+  well below the speed of light.
+\end{description}
 
-The modelling decisions and assumptions are chosen to keep the problem solvable and traceable while staying physically meaningful. Fields are treated as piecewise-uniform inside rectangular regions to approximate real devices built from uniform-field components and to make configuration changes explicit at boundaries. Collisions and particle--particle effects are excluded so the trajectory depends only on the Lorentz force, which is the intended focus of the model. Typical values are selected to be realistic for basic demonstrations and to avoid extreme parameter choices that would make numerical integration unstable or require additional physics beyond the current scope.
+\subsubsection*{Modelling Decisions}
+\begin{description}
+\item[\textbf{Cartesian coordinate system:}]
+  A Cartesian system aligns naturally with rectangular field-region boundaries
+  (\aref{A_rectRegions}) and makes numerical implementation straightforward.
+\item[\textbf{Piecewise-uniform fields (\aref{A_piecewiseUniform}):}]
+  Treating fields as uniform within each rectangular region approximates real devices
+  built from discrete uniform-field cells (e.g., parallel-plate capacitors) and makes
+  field changes explicit at region boundaries.
+\item[\textbf{Lorentz force only (\aref{A_lorentzOnly}):}]
+  Restricting dynamics to the Lorentz force focuses the simulation on the intended
+  electromagnetic physics and avoids unrelated forces not relevant to the target use cases.
+\end{description}
+
+\subsubsection*{Assumptions}
+\begin{description}
+\item[\aref{A_piecewiseUniform}:] Justified by the physical setup of typical laboratory
+  devices that use discrete field cells with well-defined boundaries.
+\item[\aref{A_singleParticle}:] Valid for dilute beams where collective effects are
+  negligible; simplifies the mathematical formulation to a single ODE system.
+\item[\aref{A_noInteractions}:] Consistent with the single-particle approximation;
+  ensures the trajectory depends only on external fields.
+\item[\aref{A_prescribedFields}:] Valid when the particle's electromagnetic perturbation
+  of the applied fields is negligible, as in most laboratory devices.
+\item[\aref{A_twoDMotion}:] See Scope Decisions above.
+\item[\aref{A_BperpPlane}:] An out-of-plane magnetic field is the standard configuration
+  for deflecting particles in the $x$--$y$ plane in introductory electromagnetism.
+\item[\aref{A_EaxisAligned}:] Axis-aligned in-plane electric fields correspond to
+  parallel-plate capacitor geometries common in educational contexts.
+\item[\aref{A_rectRegions}:] Rectangular regions are easy to specify, verify, and
+  implement; they match the geometry of most practical field-generating devices.
+\item[\aref{A_lineDetector}:] Modelling the detector as a 1D line is consistent with
+  the 2D scope and is the standard abstraction in single-particle trajectory analysis.
+\item[\aref{A_fullDetection}:] Simplifies primary use cases by avoiding missed-hit
+  edge cases; a large enough detector is realistic for pedagogical demonstrations.
+\item[\aref{A_lorentzOnly}:] See Modelling Decisions above.
+\end{description}
 
 \section{Likely Changes}    
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] Add new a feature such that the software support 3 dimension.
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_3D}:] Extend \progname{} to support three-dimensional (3D) motion.
 
 \end{itemize}
 
@@ -1341,7 +1503,7 @@ The modelling decisions and assumptions are chosen to keep the problem solvable 
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] None
+\item[UC\refstepcounter{ucnum}\theucnum\label{UC_noChange}:] The governing physics is the Lorentz force law; this is unlikely to change.
 
 \end{itemize}
 
@@ -1353,8 +1515,9 @@ component is changed, the items in the column of that component that are marked
 with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows the
 dependencies of theoretical models, general definitions, data definitions, and
 instance models with each other. Table~\ref{Table:R_trace} shows the
-dependencies of instance models, requirements, and data constraints on each
-other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
+dependencies of goal statements and requirements on the theoretical models,
+general definitions, data definitions, and instance models.
+Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
 general definitions, data definitions, instance models, and likely changes on
 the assumptions.
 
@@ -1409,23 +1572,40 @@ the assumptions.
 }
 
 
-\begin{table}[h!]
+\afterpage{
+\begin{table}[p]
 \centering
-\renewcommand{\arraystretch}{1.2}
-\setlength{\tabcolsep}{6pt}
-\begin{tabular}{|l|c|c|}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.0}
+\adjustbox{max width=\textwidth}{%
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline
- & \iref{IM_stateEvol} & \iref{IM_detHit} \\
+ & \rotatebox{90}{\tref{TM:velVec}} & \rotatebox{90}{\tref{TM:accVec}} &
+ \rotatebox{90}{\tref{TM:newton2}} & \rotatebox{90}{\tref{TM:lorentzForce}} &
+ \rotatebox{90}{\tref{TM:eqnMotion}} & \rotatebox{90}{\dref{GD_kin2D}} &
+ \rotatebox{90}{\dref{GD_vCrossB2D}} & \rotatebox{90}{\dref{GD_dyn2D}} &
+ \rotatebox{90}{\ddref{DD_qOverm}} & \rotatebox{90}{\ddref{DD_initState}} &
+ \rotatebox{90}{\ddref{DD_EField}} & \rotatebox{90}{\ddref{DD_BField}} &
+ \rotatebox{90}{\ddref{DD_regionRect}} & \rotatebox{90}{\ddref{DD_fieldsByRegion}} &
+ \rotatebox{90}{\ddref{DD_detectorLine}} & \rotatebox{90}{\iref{IM_stateEvol}} &
+ \rotatebox{90}{\iref{IM_detHit}} \\
 \hline
-\rref{R_inputSpec}     & X & X \\ \hline
-\rref{R_echoInputs}    &   &   \\ \hline
-\rref{R_computeTraj}   & X &   \\ \hline
-\rref{R_detectHit}     & X & X \\ \hline
-\rref{R_reportOutputs} & X & X \\ \hline
-\end{tabular}
-\caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
+\gsref{G_Trajectory}     &   &   &   &   & X &   &   & X &   &   &   &   &   &   &   & X &   \\ \hline
+\gsref{G_DetectorOutcome}&   &   &   &   &   &   &   &   &   &   &   &   &   &   & X &   & X \\ \hline
+\rref{R_inputSpec}       &   &   &   &   &   &   &   &   & X & X & X & X & X & X & X &   &   \\ \hline
+\rref{R_echoInputs}      &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   \\ \hline
+\rref{R_computeTraj}     &   &   &   &   & X & X &   & X & X & X &   &   &   & X &   & X &   \\ \hline
+\rref{R_detectHit}       &   &   &   &   &   &   &   &   &   &   &   &   &   &   & X & X & X \\ \hline
+\rref{R_reportOutputs}   &   &   &   &   &   &   &   &   &   &   &   &   &   &   &   & X & X \\ \hline
+\end{tabular}%
+}
+\caption{Traceability Matrix Showing the Connections Between Goal Statements and
+  Requirements vs.\ Theoretical Models, General Definitions, Data Definitions,
+  and Instance Models}
 \label{Table:R_trace}
 \end{table}
+}
 
 
 \afterpage{
@@ -1466,7 +1646,7 @@ the assumptions.
 \rref{R_computeTraj}    & X& X& X& X& X& X& X& X& & & X\\ \hline
 \rref{R_detectHit}      & & & & & & & & & X& X& \\ \hline
 \rref{R_reportOutputs}  & & & & & & & & & & & \\ \hline
-\lcref{LC_meaningfulLabel}& & & & & X& X& X& & & & \\ \hline
+\lcref{LC_3D}& & & & & X& X& X& & & & \\ \hline
 \end{tabular}%
 }
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
@@ -1479,11 +1659,7 @@ what has to be additionally modified if a certain component is changed.  The
 arrows in the graphs represent dependencies. The component at the tail of an
 arrow is depended on by the component at the head of that arrow. Therefore, if a
 component is changed, the components that it points to should also be
-changed. Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, likely changes, and
-assumptions on each other. 
-% Figure~\ref{Fig_RTrace} shows the dependencies of
-% instance models, requirements, and data constraints on each other.
+changed.
 
 % \begin{figure}[h!]
 % 	\begin{center}
@@ -1510,7 +1686,21 @@ assumptions on each other.
 
 \section{Values of Auxiliary Constants}
 
-None
+The following table lists the software constraint bounds used in the Software Constraint.
+
+\renewcommand{\arraystretch}{1.2}
+\noindent \begin{tabular}{l l l p{5.5cm}}
+  \toprule
+  \textbf{Name} & \textbf{Symbol} & \textbf{Value} & \textbf{Description} \\
+  \midrule
+  Min mass & $m_{\min}$ & $1\times10^{-31}$\,\si{\kilogram} & Lower bound on particle mass. \\
+  Max mass & $m_{\max}$ & $1\times10^{-25}$\,\si{\kilogram} & Upper bound on particle mass. \\
+  Max charge magnitude & $q_{\max}$ & $1\times10^{-15}$\,\si{\coulomb} & Upper bound on $|q|$. \\
+  Max speed & $v_{\max}$ & $1\times10^{7}$\,\si{\metre\per\second} & Upper bound on initial speed ($< 0.1c$). \\
+  Max electric field & $E_{\max}$ & $1\times10^{6}$\,\si{\newton\per\coulomb} & Upper bound on $|\mathbf{E}_i|$. \\
+  Max magnetic flux density & $B_{\max}$ & $10$\,\si{\tesla} & Upper bound on $|B_i|$. \\
+  Max final time & $t_{\max}$ & $1\times10^{-4}$\,\si{\second} & Upper bound on simulation duration. \\
+\end{tabular}
 \newpage
 
 \bibliographystyle{plainnat}
