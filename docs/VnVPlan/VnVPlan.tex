@@ -26,7 +26,7 @@
 
 \title{System Verification and Validation Plan for \progname{Trajecto}} 
 \author{Zhuo Zhang}
-\date{Feburary 10, 2026}
+\date{February 10, 2026}
 	
 \maketitle
 
@@ -37,7 +37,8 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Feburary 10, 2026 & 1.0 & Initial draft\\
+February 10, 2026 & 1.0 & Initial draft\\
+March 1, 2026 & 1.1 & Updated based on feedback\\
 \bottomrule
 \end{tabularx}
 
@@ -422,11 +423,208 @@ How test will be performed:
 
 \end{enumerate}
 
+\subsubsection{Electric-field analytic trajectory}
+
+This test verifies that the electric-field term of the Lorentz force is
+correctly implemented (GD3 in the SRS), addressing the gap identified in
+issue~\#10.  With $\mathbf{B}=\mathbf{0}$ and $\mathbf{E}\neq\mathbf{0}$, the
+equations of motion reduce to constant acceleration, yielding a closed-form
+analytic solution.
+
+\begin{enumerate}
+
+\item{T-FR-4\\}
+
+Control: Automatic\\
+
+Initial State:
+\begin{itemize}
+  \item Clean working directory (no prior outputs).
+\end{itemize}
+
+Input:
+\begin{itemize}
+  \item Particle: $m = 1.0$, $q = 1.0$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(0,0)$.
+  \item Region: $R_1 = [-1,3]\times[-1,1]$.
+  \item Fields: $\mathbf{E}_1=\langle 1,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$.
+  \item Detector: $x_{\mathrm{det}}=2$, $y\in[-0.5,0.5]$.
+  \item $t_{\text{final}}=3.0$.
+\end{itemize}
+
+Output:
+\begin{itemize}
+  \item Trajectory (exact analytic solution under constant acceleration
+        $a_x = qE_x/m = 1$):
+  \[
+    x(t)=\tfrac{1}{2}t^2,\quad y(t)=0,\quad v_x(t)=t,\quad v_y(t)=0.
+  \]
+  \item Detector hit:
+  \[
+    t_{\mathrm{hit}} = 2.0,\quad (x_{\mathrm{hit}},y_{\mathrm{hit}})=(2,\,0).
+  \]
+\end{itemize}
+
+Test Case Derivation:
+\begin{itemize}
+  \item With $\mathbf{B}=\mathbf{0}$ and $\mathbf{E}=\langle 1,0,0\rangle$, the
+        $x$-equation of motion gives $\dot{v}_x = (q/m)E_x = 1$ and
+        $\dot{v}_y = 0$.  Integrating with zero initial velocity and position
+        yields the stated formulas.
+  \item The detector hit time follows from $x(t_{\mathrm{hit}})=x_{\mathrm{det}}=2$.
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Run Trajecto with the inputs above.
+  \item Parse the sampled trajectory and check max absolute errors:
+        $|x(t_i)-\tfrac{1}{2}t_i^2|\le 10^{-3}$ and $|y(t_i)|\le 10^{-6}$.
+  \item Verify the reported $t_{\mathrm{hit}}=2.0$ and $y_{\mathrm{hit}}=0$,
+        each within tolerance $10^{-3}$.
+\end{itemize}
+
+\end{enumerate}
+
+\subsubsection{Multi-region field transition}
+
+This test verifies that the piecewise field-selection logic (DD6, IM1 in the SRS)
+correctly switches field values when the particle crosses from one region into an
+adjacent region with different field values, addressing the gap identified in
+issue~\#11.
+
+\begin{enumerate}
+
+\item{T-FR-5\\}
+
+Control: Automatic\\
+
+Initial State:
+\begin{itemize}
+  \item Clean working directory (no prior outputs).
+\end{itemize}
+
+Input:
+\begin{itemize}
+  \item Particle: $m=1$, $q=1$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(1,0)$.
+  \item Two adjacent regions:
+    \begin{itemize}
+      \item $R_1=[-1,1]\times[-2,2]$:
+            $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$
+            (field-free).
+      \item $R_2=[1,4]\times[-2,2]$:
+            $\mathbf{E}_2=\langle 0,0,0\rangle$, $\mathbf{B}_2=\langle 0,0,1\rangle$
+            (magnetic-only).
+    \end{itemize}
+  \item Detector: $x_{\mathrm{det}}=0.5$, $y\in[-1,1]$.
+  \item $t_{\text{final}}=4.0$.
+\end{itemize}
+
+Output:
+\begin{itemize}
+  \item \textbf{Detector hit (in $R_1$):}
+  \[
+    t_{\mathrm{hit}}=0.5,\quad (x_{\mathrm{hit}},y_{\mathrm{hit}})=(0.5,\,0).
+  \]
+  \item \textbf{Speed invariant after entering $R_2$} (confirms the field switch
+        occurred): for all sampled times $t_i > 1$,
+  \[
+    v_x(t_i)^2+v_y(t_i)^2 \approx 1
+    \quad\Bigl(\text{relative drift} \le 1\%\Bigr).
+  \]
+\end{itemize}
+
+Test Case Derivation:
+\begin{itemize}
+  \item In $R_1$ ($0\le t\le 1$): no fields, so $x(t)=t$, $y(t)=0$.
+        Detector hit at $t=0.5$, $y_{\mathrm{hit}}=0$.
+  \item At $t=1$ the particle enters $R_2$ at $(1,0)$ with velocity $(1,0)$.
+        In $R_2$, $\mathbf{B}\neq\mathbf{0}$ and $\mathbf{E}=\mathbf{0}$, so the
+        magnetic force is perpendicular to velocity and speed is conserved.
+        If the field-selection logic correctly switches to the $R_2$ fields, speed
+        remains~$1$; if the fields were not switched the particle would continue
+        in a straight line with no speed change but incorrect field behaviour.
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Run Trajecto with the inputs above.
+  \item Verify $t_{\mathrm{hit}}=0.5$ and $y_{\mathrm{hit}}=0$ (each within $10^{-3}$).
+  \item Extract $(v_x,v_y)$ for all sampled $t_i > 1$ and confirm
+        $\max_i\bigl|v_x(t_i)^2+v_y(t_i)^2-1\bigr|\le 0.01$.
+\end{itemize}
+
+\end{enumerate}
+
+\subsubsection{Input Validation} \label{sec:inputval}
+
+These tests verify that \progname{Trajecto} rejects every class of invalid input
+described in the data constraints table of the SRS (Table~2 in the SRS,
+addressing the gap identified in issue~\#12).
+One automatic test is provided per input constraint, achieving systematic
+coverage of all constraint checks.
+Each test expects the program to exit with a non-zero status and to print an
+actionable error message naming the invalid parameter and its constraint.
+No trajectory or detector output should be produced.
+
+\begin{enumerate}
+
+\item{T-INV-1\\}
+
+Control: Automatic\\
+
+Input: $m = 0$ (all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and prints an error message naming
+$m$ and stating the constraint $m > 0$.  No trajectory output is produced.
+
+\item{T-INV-2\\}
+
+Control: Automatic\\
+
+Input: $q = 0$ (all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and prints an error message naming
+$q$ and stating the constraint $q \neq 0$.  No trajectory output is produced.
+
+\item{T-INV-3\\}
+
+Control: Automatic\\
+
+Input: $t_{\text{final}} = -1$ (all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and prints an error message naming
+$t_{\text{final}}$ and stating the constraint $t_{\text{final}} > 0$.  No
+trajectory output is produced.
+
+\item{T-INV-4\\}
+
+Control: Automatic\\
+
+Input: A field region with $x_{\min} = x_{\max}$ (degenerate rectangle; all
+other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and prints an error message
+identifying the degenerate region and the constraint
+$x_{\min} < x_{\max}$.  No trajectory output is produced.
+
+\item{T-INV-5\\}
+
+Control: Automatic\\
+
+Input: Detector with $y_{\min}^{\mathrm{det}} = y_{\max}^{\mathrm{det}}$
+(zero-length detector segment; all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and prints an error message
+identifying the detector constraint
+$y_{\min}^{\mathrm{det}} < y_{\max}^{\mathrm{det}}$.  No trajectory output is
+produced.
+
+\end{enumerate}
+
 \wss{It would be nice to have a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.  If a section
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
-		
+
 
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -582,12 +780,11 @@ Initial State:
 
 Input/Condition:
 \begin{itemize}
-  \item Run with one invalid input (choose exactly one):
-  \begin{itemize}
-    \item $m \le 0$, or
-    \item $t_{\text{final}} \le 0$, or
-    \item degenerate rectangle: $x_{\min} \ge x_{\max}$ (or $y_{\min}\ge y_{\max}$).
-  \end{itemize}
+  \item Systematic coverage of all input constraints is provided by the automated
+        tests T-INV-1 through T-INV-5 (see Section~\ref{sec:inputval}). This
+        manual test focuses exclusively on the \emph{quality} of the error message
+        visible to a real user.  Choose any one scenario from T-INV-1 through
+        T-INV-5 to exercise.
 \end{itemize}
 
 Output/Result:
@@ -595,14 +792,18 @@ Output/Result:
   \item Program rejects the run and prints a clear, actionable error message that:
   \begin{itemize}
     \item names the invalid parameter, and
-    \item states the expected constraint of them.
+    \item states the expected constraint.
   \end{itemize}
+  \item The message is understandable without consulting the manual.
   \item No misleading trajectory/detector outputs are produced for the invalid run.
 \end{itemize}
 
 How test will be performed:
 \begin{itemize}
-  \item Execute the invalid-input run and inspect the error message and program behavior.
+  \item Choose one scenario from T-INV-1 through T-INV-5.
+  \item Execute the invalid-input run, inspect the error message, and record
+        whether a new user could understand and correct the mistake without
+        additional documentation.
 \end{itemize}
 
 \end{enumerate}
@@ -637,12 +838,27 @@ Output/Result:
     \item test suite: update/add system tests and unit tests.
   \end{itemize}
   \item Pass criterion: estimated LC1 effort $< 0.25$ of original development effort.
+        The 25\% threshold is justified as follows: the 2D-to-3D extension
+        (LC1, \texttt{LC\_3D} in the SRS) requires adding one velocity component
+        ($v_z$) and one in-plane field component to the ODE system, and
+        generalising the region geometry from axis-aligned rectangles to
+        axis-aligned boxes.  The SRS was designed so that these changes are
+        localised to the state representation, integrator, region-lookup, and
+        detector modules --- the exact artifacts listed above.  Because the SRS
+        designates LC1 as a \emph{Likely} change, the design should already
+        accommodate it; 25\% is therefore a conservative upper bound for
+        tractable, well-scoped changes.
+        If the impact analysis shows the actual scope exceeds this threshold,
+        the fallback pass criterion is to document every affected artifact and
+        provide a written rationale for the excess scope.
 \end{itemize}
 
 How test will be performed:
 \begin{itemize}
   \item Create a short impact table (artifact $\rightarrow$ expected modifications).
   \item Produce an effort estimate and compute the ratio versus baseline effort.
+  \item If the ratio exceeds 0.25, document the reason and assess whether the
+        excess scope was foreseeable from the SRS.
 \end{itemize}
 
 \end{enumerate}
@@ -690,11 +906,12 @@ How test will be performed:
 \toprule
 \textbf{Requir.} & \textbf{Test Cases} \\
 \midrule
-R1  & T-FR-1, T-FR-2, T-FR-3 \\
-R2  & T-FR-1 \\
-R3  & T-FR-2, T-FR-3 \\
-R4  & T-FR-2 \\
-R5  & T-FR-2 \\
+R1 (inputSpec)   & T-FR-1, T-FR-2, T-FR-3, T-FR-4, T-FR-5,
+                   T-INV-1, T-INV-2, T-INV-3, T-INV-4, T-INV-5 \\
+R2 (echoInputs)  & T-FR-1 \\
+R3 (computeTraj) & T-FR-2, T-FR-3, T-FR-4, T-FR-5 \\
+R4 (detectHit)   & T-FR-2, T-FR-4 \\
+R5 (reportOutputs) & T-FR-2 \\
 \midrule
 NFR1 (Accuracy)         & NFR-ACC-1, NFR-ACC-2 \\
 NFR2 (Usability)        & NFR-USE-1, NFR-USE-2 \\
