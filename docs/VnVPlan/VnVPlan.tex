@@ -721,6 +721,17 @@ Output/Result:
   \[
     t_{\mathrm{hit}} = 0.5,\quad (x_{\mathrm{hit}},y_{\mathrm{hit}})=(1,0.5).
   \]
+  \item Error definitions:
+  \[
+    e_{\mathrm{pos}}(t_i)=\|\mathbf{r}_{\mathrm{num}}(t_i)-\mathbf{r}_{\mathrm{ref}}(t_i)\|_2,\quad
+    e_{\mathrm{vel}}(t_i)=\|\mathbf{v}_{\mathrm{num}}(t_i)-\mathbf{v}_{\mathrm{ref}}(t_i)\|_2,
+  \]
+  \[
+    e_{t,\mathrm{hit}}=\left|t_{\mathrm{hit}}^{\mathrm{num}}-t_{\mathrm{hit}}^{\mathrm{ref}}\right|,\quad
+    e_{\mathrm{hit}}=\|\mathbf{r}_{\mathrm{hit}}^{\mathrm{num}}-\mathbf{r}_{\mathrm{hit}}^{\mathrm{ref}}\|_2.
+  \]
+  Report both max error and RMS error over sampled times for
+  $e_{\mathrm{pos}}$ and $e_{\mathrm{vel}}$.
   \item Acceptance criteria:
   \begin{itemize}
     \item Max position error $\le 5h\cdot \max(|v_x|,|v_y|)$.
