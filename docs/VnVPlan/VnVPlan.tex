@@ -249,18 +249,20 @@ CAS741) for a partial usability survey.}
 
 \subsection{Software Validation}
 
-Trajecto is validated by checking whether its outputs match a credible reference
-behaviour consistent with the SRS.  We will validate the simulator through:
+External stakeholder validation is out of scope for this course deliverable.
+This plan focuses on verification that the SRS and implementation are
+consistent. The checks in this section use reference behaviours to support that
+verification scope:
 \begin{itemize}
-  \item \textbf{Analytic validation:} for scenarios where a closed-form solution
+  \item \textbf{Analytic reference comparison:} for scenarios where a closed-form solution
   exists, compare the reported trajectory and detector-hit results to the
   analytic solution.
-  \item \textbf{Physics-based validation:} check that known physical properties
+  \item \textbf{Physics-invariant verification:} check that known physical properties
   (e.g., invariants or qualitative behaviours expected under the prescribed
   fields) hold for representative inputs.
-  \item \textbf{User-level validation:} confirm that a typical user can run a
-  provided example and correctly interpret the reported trajectory data and
-  detector-hit result.
+  \item \textbf{User-level interpretation check:} confirm that a typical user
+  can run a provided example and correctly interpret trajectory and detector
+  outputs.
 \end{itemize}
 
 \wss{You might want to use review sessions with the stakeholder to check that
