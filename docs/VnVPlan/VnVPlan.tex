@@ -89,7 +89,12 @@ The Symbols, Abbreviations, and Acronyms are identical to the ones in the SRS of
 
 \pagenumbering{arabic}
 
-This document provide an introductory blurb and roadmap of the Trajecto Verification and Validation plan.
+This document introduces the Trajecto Verification and Validation (VnV) plan,
+summarizes the evidence we will collect, and provides a roadmap for execution.
+Section~\ref{Sec:VnVPlan} defines the strategy and responsibilities,
+Section~\ref{Sec:SystemTests} defines system-level test cases and acceptance
+criteria, and Section~\ref{Sec:UnitTest} outlines unit-testing scope and
+traceability expectations.
 
 \section{General Information}
 
@@ -146,7 +151,7 @@ None
 \end{itemize}
 
 
-\section{Plan}
+\section{Plan}\label{Sec:VnVPlan}
 
 This section provides a roadmap of the VnV strategies planned for the project.
 
@@ -265,7 +270,7 @@ as a Rev 0 demo for the supervisor.}
 
 \wss{This section might reference back to the SRS verification section.}
 \newpage
-\section{System Tests}
+\section{System Tests}\label{Sec:SystemTests}
 
 \wss{There should be text between all headings, even if it is just a roadmap of
 the contents of the subsections.}
@@ -922,7 +927,7 @@ NFR4 (Portability)      & NFR-PORT-1 \\
 \label{Table:ReqTrace}
 \end{table}
 
-\section{Unit Test Description}
+\section{Unit Test Description}\label{Sec:UnitTest}
 
 \wss{This section should not be filled in until after the MIS (detailed design
   document) has been completed.}
