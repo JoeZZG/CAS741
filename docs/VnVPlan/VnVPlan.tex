@@ -233,14 +233,18 @@ CAS741) for a partial usability survey.}
 \subsection{Automated Testing and Verification Tools}
 
 \begin{itemize}
-  \item \progname{Trajecto} will be generated from the Drasil artifacts; the
-  generated documentation is treated as part of the evidence trail.
+  \item \progname{Trajecto} will be generated from Drasil artifacts; generated
+  documentation and test outputs provide evidence that requirements are mapped
+  to executable artifacts.
   \item A Python script will run \progname{Trajecto} on fixed test inputs and
   collect the resulting outputs.
   \item The script will parse \progname{Trajecto}'s outputs and check key
   values against expected results.
   \item All test inputs and expected outputs will be tracked so that tests can
   be re-run after any changes.
+  \item Code inspection evidence will be collected through issue discussions and
+  pull-request reviews, with each review linked to the affected requirements or
+  tests.
 \end{itemize}
 
 \subsection{Software Validation}
