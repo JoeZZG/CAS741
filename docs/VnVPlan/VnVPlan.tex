@@ -649,6 +649,33 @@ produced.
 
 \end{enumerate}
 
+\subsubsection{Input-constraint and pseudo-oracle coverage}
+
+Table~\ref{tab:input_pseudo_coverage} summarizes systematic coverage of every
+input-constraint class and pseudo-oracle comparison scenario.
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{p{3.8cm}p{6.2cm}X}
+\toprule
+\textbf{Category} & \textbf{Reference Behaviour} & \textbf{Tests} \\
+\midrule
+Input constraint: $m>0$ & Reject invalid mass and report the violated constraint. & T-INV-1 \\
+Input constraint: $q\neq 0$ & Reject invalid charge and report the violated constraint. & T-INV-2 \\
+Input constraint: $t_{\text{final}}>0$ & Reject non-positive final time and report the violated constraint. & T-INV-3 \\
+Input constraint: valid rectangle & Reject degenerate region geometry and report the violated constraint. & T-INV-4 \\
+Input constraint: valid detector segment & Reject zero-length detector segment and report the violated constraint. & T-INV-5 \\
+Pseudo-oracle: field-free motion & Closed-form trajectory and detector-hit comparison for $\mathbf{E}=\mathbf{0},\mathbf{B}=\mathbf{0}$. & T-FR-2 \\
+Pseudo-oracle: E-only motion & Closed-form constant-acceleration comparison for $\mathbf{B}=\mathbf{0},\mathbf{E}\neq\mathbf{0}$. & T-FR-4 \\
+Pseudo-oracle: B-only invariants & Speed conservation check under magnetic-only motion. & T-FR-3, NFR-ACC-2 \\
+Pseudo-oracle: multi-region transition & Check field-switch behaviour and post-transition invariants. & T-FR-5 \\
+\bottomrule
+\end{tabularx}
+\caption{Input-constraint and pseudo-oracle coverage summary}
+\label{tab:input_pseudo_coverage}
+\end{table}
+
 \wss{It would be nice to have a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good here.  If a section
   covers tests for input constraints, you should reference the data constraints
