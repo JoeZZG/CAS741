@@ -208,6 +208,8 @@ program is directly executable.
 \subsection{Implementation Verification}
 
 Implementation verification will proceed in the following steps:
+\textbf{Baseline definition:} baseline means an independent PoC reference
+solver for IM1, not the primary \progname{Trajecto} executable.
 \begin{enumerate}
   \item Implement the core ODE of IM1 to generate reference outputs for key scenarios as a baseline.
   \item Produce the main Drasil-generated implementation that reads inputs, validates constraints, computes trajectories, and detects hits (IM2).
