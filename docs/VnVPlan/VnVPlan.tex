@@ -307,6 +307,28 @@ Analytic reference formulas used in this section are explicitly:
 
 \subsubsection{Input specification + echoing inputs}
 
+The functional tests below use the following input contract, aligned with the
+current project scope:
+\begin{itemize}
+  \item \textbf{Detector specification:} detector orientation is either
+  \texttt{vertical} or \texttt{horizontal}; detector location and detector
+  length are provided explicitly.
+  \item \textbf{Region specification:} each region is defined by the locations
+  of four corners together with $(E_x,E_y,B)$ for that region.
+  \item \textbf{Region topology constraints:} all regions have the same width
+  and height, neighboring regions are adjacent, and the union of all regions is
+  a rectangle.
+  \item \textbf{Particle specification:} $(m,q,x_0,y_0,v_{x0},v_{y0})$ and
+  $t_{\text{final}}$ are provided.
+\end{itemize}
+
+The functional tests below also use the output contract:
+\begin{itemize}
+  \item If no detector hit occurs, output reports $t_{\mathrm{hit}}=-1$.
+  \item If a detector hit occurs, output reports $t_{\mathrm{hit}}$ and hit
+  location $(x_{\mathrm{hit}},y_{\mathrm{hit}})$.
+\end{itemize}
+
 \begin{enumerate}
 
 \item{T-FR-1\\}
@@ -321,32 +343,38 @@ Initial State:
 Input:
 \begin{itemize}
   \item Particle: $m = 1.0$, $q = 1.0$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(2,1)$.
-  \item Region: $R_1 = [0,2]\times[-1,2]$.
-  \item Fields: $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$.
-  \item Detector: $x_{\mathrm{det}}=1$, $y\in[-1,2]$.
+  \item Regions (same size, adjacent, rectangular union):
+  \begin{itemize}
+    \item $R_1$ corners: $(0,-1)$, $(1,-1)$, $(1,1)$, $(0,1)$,
+    $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$.
+    \item $R_2$ corners: $(1,-1)$, $(2,-1)$, $(2,1)$, $(1,1)$,
+    $\mathbf{E}_2=\langle 0,0,0\rangle$, $\mathbf{B}_2=\langle 0,0,0\rangle$.
+  \end{itemize}
+  \item Detector: orientation \texttt{vertical}, location $x_{\mathrm{det}}=1$,
+  length $L_{\mathrm{det}}=2$ (covers $y\in[-1,1]$).
   \item $t_{\text{final}}=1.0$.
 \end{itemize}
 
 Output:
 \begin{itemize}
-  \item The program echoes the full input specification used for the run (all numeric values and region/field/detector definitions).
-  \item No input-constraint errors are reported (satisfies $m>0$, $q\neq 0$, $t_{\text{final}}>0$, valid rectangle, valid detector segment).
-  \item Numerical results are consistent with the field-free truth for this
-  scenario: at $t_{\text{final}}=1$, the reported state is
-  $(x,y,v_x,v_y)=(2,1,2,1)$ (within tolerance), and the detector summary
-  reports hit time near $0.5$ at $(1,0.5)$.
+  \item Program echoes full input specification, including detector orientation,
+  detector location and length, each region's four corners, and each region's
+  $(E_x,E_y,B)$ values.
+  \item No input-constraint errors are reported.
 \end{itemize}
 
 Test Case Derivation:
 \begin{itemize}
-  \item Field-free motion is the simplest valid setup. 
+  \item This is the simplest valid multi-region input that satisfies the new
+  topology constraints (same-size regions, adjacency, rectangular union).
   \item It isolates input parsing and echoing.
 \end{itemize}
 
 How test will be performed:
 \begin{itemize}
-    \item Run Trajecto with the inputs above.
-  \item Check the echoed input block matches the provided values.
+  \item Run Trajecto with the inputs above.
+  \item Check echoed detector orientation/location/length and all region-corner
+  definitions match the provided values.
 \end{itemize}
 
 \end{enumerate}
@@ -368,9 +396,9 @@ Input:
 \begin{itemize}
   \item Same inputs as T-FR-1:
   $m = 1.0$, $q = 1.0$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(2,1)$,
-  $R_1 = [0,2]\times[-1,2]$,
-  $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$,
-  detector $x_{\mathrm{det}}=1$, $y\in[-1,2]$,
+  two equal-size adjacent field-free regions with rectangular union, detector
+  orientation \texttt{vertical} at $x_{\mathrm{det}}=1$ with
+  $L_{\mathrm{det}}=2$,
   $t_{\text{final}}=1.0$.
 \end{itemize}
 
@@ -387,7 +415,8 @@ Output:
   \[
     t_{\mathrm{hit}} = 0.5,\quad (x_{\mathrm{hit}},y_{\mathrm{hit}})=(1,0.5).
   \]
-  \item Output includes sampled trajectory data and detector results when a hit occurs.
+  \item Output contract for hit case is satisfied:
+  $t_{\mathrm{hit}}\ge 0$ is reported and hit location is reported.
 \end{itemize}
 
 Test Case Derivation:
@@ -421,10 +450,15 @@ Initial State:
 Input:
 \begin{itemize}
   \item Particle: $m=1$, $q=1$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(1,0)$.
-  \item Region: $R_1=[-2,2]\times[-2,2]$.
-  \item Fields: $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,1\rangle$ (i.e., $B=1$).
-  \item Detector: choose a detector unlikely to be reached during the simulated time,
-  e.g., $x_{\mathrm{det}}=2$, $y\in[-0.5,0.5]$.
+  \item Regions (same size, adjacent, rectangular union):
+  \begin{itemize}
+    \item $R_1=[-2,0]\times[-2,2]$, $\mathbf{E}_1=\langle 0,0,0\rangle$,
+    $\mathbf{B}_1=\langle 0,0,1\rangle$.
+    \item $R_2=[0,2]\times[-2,2]$, $\mathbf{E}_2=\langle 0,0,0\rangle$,
+    $\mathbf{B}_2=\langle 0,0,1\rangle$.
+  \end{itemize}
+  \item Detector: orientation \texttt{horizontal}, location
+  $y_{\mathrm{det}}=1.5$, length $L_{\mathrm{det}}=4$ (covers $x\in[-2,2]$).
   \item $t_{\text{final}}=1.0$.
 \end{itemize}
 
@@ -434,7 +468,9 @@ Output:
   \[
     v_x(t)^2+v_y(t)^2 = v_0^2 = 1.
   \]
-  \item The program reports that no detector hit occurs within $[0,t_{\text{final}}]$.
+  \item Output contract for no-hit case is satisfied:
+  the program reports $t_{\mathrm{hit}}=-1$.
+  \item No hit location payload is reported when $t_{\mathrm{hit}}=-1$.
   \item The program still outputs sampled trajectory data.
 \end{itemize}
 
@@ -447,7 +483,8 @@ How test will be performed:
 \begin{itemize}
   \item Run Trajecto and extract $v_x, v_y$ from trajectory samples.
   \item Compute $v_x^2+v_y^2$ and confirm it stays constant within tolerance.
-  \item Confirm the detector-output section indicates no hit.
+  \item Confirm the detector-output section reports $t_{\mathrm{hit}}=-1$ and
+  no hit coordinates.
 \end{itemize}
 
 \end{enumerate}
@@ -474,9 +511,15 @@ Initial State:
 Input:
 \begin{itemize}
   \item Particle: $m = 1.0$, $q = 1.0$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(0,0)$.
-  \item Region: $R_1 = [-1,3]\times[-1,1]$.
-  \item Fields: $\mathbf{E}_1=\langle 1,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$.
-  \item Detector: $x_{\mathrm{det}}=2$, $y\in[-0.5,0.5]$.
+  \item Regions (same size, adjacent, rectangular union):
+  \begin{itemize}
+    \item $R_1=[-1,1]\times[-1,1]$,
+    $\mathbf{E}_1=\langle 1,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$.
+    \item $R_2=[1,3]\times[-1,1]$,
+    $\mathbf{E}_2=\langle 1,0,0\rangle$, $\mathbf{B}_2=\langle 0,0,0\rangle$.
+  \end{itemize}
+  \item Detector: orientation \texttt{vertical}, location $x_{\mathrm{det}}=2$,
+  length $L_{\mathrm{det}}=1$ (covers $y\in[-0.5,0.5]$).
   \item $t_{\text{final}}=3.0$.
 \end{itemize}
 
@@ -509,6 +552,8 @@ How test will be performed:
         $|x(t_i)-\tfrac{1}{2}t_i^2|\le 10^{-3}$ and $|y(t_i)|\le 10^{-6}$.
   \item Verify the reported $t_{\mathrm{hit}}=2.0$ and $y_{\mathrm{hit}}=0$,
         each within tolerance $10^{-3}$.
+  \item Confirm hit-case output contract:
+  $t_{\mathrm{hit}}\ge 0$ and hit location is reported.
 \end{itemize}
 
 \end{enumerate}
@@ -534,16 +579,17 @@ Initial State:
 Input:
 \begin{itemize}
   \item Particle: $m=1$, $q=1$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(1,0)$.
-  \item Two adjacent regions:
+  \item Two adjacent equal-size regions:
     \begin{itemize}
-      \item $R_1=[-1,1]\times[-2,2]$:
+      \item $R_1=[-1,1]\times[-1,1]$:
             $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$
             (field-free).
-      \item $R_2=[1,4]\times[-2,2]$:
+      \item $R_2=[1,3]\times[-1,1]$:
             $\mathbf{E}_2=\langle 0,0,0\rangle$, $\mathbf{B}_2=\langle 0,0,1\rangle$
             (magnetic-only).
     \end{itemize}
-  \item Detector: $x_{\mathrm{det}}=0.5$, $y\in[-1,1]$.
+  \item Detector: orientation \texttt{vertical}, location $x_{\mathrm{det}}=0.5$,
+  length $L_{\mathrm{det}}=2$ (covers $y\in[-1,1]$).
   \item $t_{\text{final}}=4.0$.
 \end{itemize}
 
@@ -577,22 +623,67 @@ How test will be performed:
 \begin{itemize}
   \item Run Trajecto with the inputs above.
   \item Verify $t_{\mathrm{hit}}=0.5$ and $y_{\mathrm{hit}}=0$ (each within $10^{-3}$).
+  \item Confirm hit-case output contract:
+  $t_{\mathrm{hit}}\ge 0$ and hit location is reported.
   \item Extract $(v_x,v_y)$ for all sampled $t_i > 1$ and confirm
         $\max_i\bigl|v_x(t_i)^2+v_y(t_i)^2-1\bigr|\le 0.01$.
 \end{itemize}
 
 \end{enumerate}
 
+\subsubsection{Horizontal-detector hit case}
+
+\begin{enumerate}
+
+\item{T-FR-6\\}
+
+Control: Automatic\\
+
+Initial State:
+\begin{itemize}
+  \item Clean working directory (no prior outputs).
+\end{itemize}
+
+Input:
+\begin{itemize}
+  \item Particle: $m=1$, $q=1$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(1,1)$.
+  \item Regions (same size, adjacent, rectangular union):
+  \begin{itemize}
+    \item $R_1=[-1,1]\times[-1,3]$,
+    $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$.
+    \item $R_2=[1,3]\times[-1,3]$,
+    $\mathbf{E}_2=\langle 0,0,0\rangle$, $\mathbf{B}_2=\langle 0,0,0\rangle$.
+  \end{itemize}
+  \item Detector: orientation \texttt{horizontal}, location
+  $y_{\mathrm{det}}=1.0$, length $L_{\mathrm{det}}=4$ (covers $x\in[-1,3]$).
+  \item $t_{\text{final}}=2.0$.
+\end{itemize}
+
+Output:
+\begin{itemize}
+  \item Expected hit values:
+  \[
+    t_{\mathrm{hit}} = 1.0,\quad (x_{\mathrm{hit}},y_{\mathrm{hit}})=(1.0,1.0).
+  \]
+  \item Hit-case output contract is satisfied:
+  $t_{\mathrm{hit}}\ge 0$ and hit location is reported.
+\end{itemize}
+
+How test will be performed:
+\begin{itemize}
+  \item Run Trajecto with the inputs above.
+  \item Verify reported $t_{\mathrm{hit}}$, $x_{\mathrm{hit}}$,
+  and $y_{\mathrm{hit}}$ within tolerance $10^{-3}$.
+\end{itemize}
+
+\end{enumerate}
+
 \subsubsection{Input Validation} \label{sec:inputval}
 
-These tests verify that \progname{Trajecto} rejects every class of invalid input
-described in the data constraints table of the SRS (Table~2 in the SRS,
-addressing the gap identified in issue~\#12).
-One automatic test is provided per input constraint, achieving systematic
-coverage of all constraint checks.
-Each test expects the program to exit with a non-zero status and to print an
-actionable error message naming the invalid parameter and its constraint.
-No trajectory or detector output should be produced.
+These tests verify that \progname{Trajecto} rejects invalid particle,
+detector, and multi-region geometry/topology inputs. Each test expects a
+non-zero exit status and a clear error message naming the violated constraint.
+No trajectory or detector-hit output should be produced for invalid inputs.
 
 \begin{enumerate}
 
@@ -612,7 +703,7 @@ Control: Automatic\\
 Input: $q = 0$ (all other inputs valid as in T-FR-1).\\
 
 Output: Program exits with a non-zero status and prints an error message naming
-$q$ and stating the constraint $q \neq 0$.  No trajectory output is produced.
+$q$ and stating the constraint $q > 0$.  No trajectory output is produced.
 
 \item{T-INV-3\\}
 
@@ -628,31 +719,101 @@ trajectory output is produced.
 
 Control: Automatic\\
 
-Input: A field region with $x_{\min} = x_{\max}$ (degenerate rectangle; all
-other inputs valid as in T-FR-1).\\
+Input: Detector orientation is \texttt{diagonal} (all other inputs valid as in
+T-FR-1).\\
 
 Output: Program exits with a non-zero status and prints an error message
-identifying the degenerate region and the constraint
-$x_{\min} < x_{\max}$.  No trajectory output is produced.
+identifying allowed detector orientations:
+\texttt{horizontal} or \texttt{vertical}.  No trajectory output is produced.
 
 \item{T-INV-5\\}
 
 Control: Automatic\\
 
-Input: Detector with $y_{\min}^{\mathrm{det}} = y_{\max}^{\mathrm{det}}$
-(zero-length detector segment; all other inputs valid as in T-FR-1).\\
+Input: Detector with $L_{\mathrm{det}} = 0$ (all other inputs valid as in
+T-FR-1).\\
 
 Output: Program exits with a non-zero status and prints an error message
-identifying the detector constraint
-$y_{\min}^{\mathrm{det}} < y_{\max}^{\mathrm{det}}$.  No trajectory output is
-produced.
+identifying the detector-length constraint $L_{\mathrm{det}} > 0$.
+No trajectory output is produced.
+
+\item{T-INV-6\\}
+
+Control: Automatic\\
+
+Input: Detector line location outside the union rectangle of all regions
+(all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and reports that detector location
+must lie within the region union rectangle. No trajectory output is produced.
+
+\item{T-INV-7\\}
+
+Control: Automatic\\
+
+Input: Region corners that do not form a rectangle
+(all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and reports invalid region-corner
+geometry. No trajectory output is produced.
+
+\item{T-INV-8\\}
+
+Control: Automatic\\
+
+Input: Region corners form a rotated (non-axis-aligned) quadrilateral
+(all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and reports that region edges must
+be axis-aligned. No trajectory output is produced.
+
+\item{T-INV-9\\}
+
+Control: Automatic\\
+
+Input: Two regions with unequal width/height
+(all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and reports that all regions must
+have equal size. No trajectory output is produced.
+
+\item{T-INV-10\\}
+
+Control: Automatic\\
+
+Input: Two nominally neighboring regions with a gap between them
+(all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and reports that regions must be
+adjacent. No trajectory output is produced.
+
+\item{T-INV-11\\}
+
+Control: Automatic\\
+
+Input: Two regions that overlap in area
+(all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and reports overlap as invalid
+region topology. No trajectory output is produced.
+
+\item{T-INV-12\\}
+
+Control: Automatic\\
+
+Input: Region set whose union is not a rectangle (for example, L-shaped tiling)
+(all other inputs valid as in T-FR-1).\\
+
+Output: Program exits with a non-zero status and reports that the union of all
+regions must be rectangular. No trajectory output is produced.
 
 \end{enumerate}
 
 \subsubsection{Input-constraint and pseudo-oracle coverage}
 
-Table~\ref{tab:input_pseudo_coverage} summarizes systematic coverage of every
-input-constraint class and pseudo-oracle comparison scenario.
+Tables~\ref{tab:input_constraint_coverage}
+and~\ref{tab:pseudo_oracle_coverage} summarize systematic coverage of
+input-constraint classes and pseudo-oracle/output-contract checks.
 
 \begin{table}[h!]
 \centering
@@ -662,18 +823,39 @@ input-constraint class and pseudo-oracle comparison scenario.
 \textbf{Category} & \textbf{Reference Behaviour} & \textbf{Tests} \\
 \midrule
 Input constraint: $m>0$ & Reject invalid mass and report the violated constraint. & T-INV-1 \\
-Input constraint: $q\neq 0$ & Reject invalid charge and report the violated constraint. & T-INV-2 \\
+Input constraint: $q>0$ & Reject invalid charge and report the violated constraint. & T-INV-2 \\
 Input constraint: $t_{\text{final}}>0$ & Reject non-positive final time and report the violated constraint. & T-INV-3 \\
-Input constraint: valid rectangle & Reject degenerate region geometry and report the violated constraint. & T-INV-4 \\
-Input constraint: valid detector segment & Reject zero-length detector segment and report the violated constraint. & T-INV-5 \\
+Input constraint: detector orientation & Accept only \texttt{horizontal} or \texttt{vertical}. & T-INV-4 \\
+Input constraint: detector length & Reject non-positive detector length. & T-INV-5 \\
+Input constraint: detector location & Reject detector lines outside region union rectangle. & T-INV-6 \\
+Input constraint: region-corner geometry & Reject non-rectangular or non-axis-aligned region definitions. & T-INV-7, T-INV-8 \\
+Input constraint: equal region size & Reject region sets with unequal width/height. & T-INV-9 \\
+Input constraint: adjacency & Reject region sets with gaps between neighbors. & T-INV-10 \\
+Input constraint: no overlap & Reject overlapping region definitions. & T-INV-11 \\
+Input constraint: union rectangle & Reject region sets whose union is not rectangular. & T-INV-12 \\
+\bottomrule
+\end{tabularx}
+\caption{Input-constraint coverage summary}
+\label{tab:input_constraint_coverage}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\textwidth}{p{3.8cm}p{6.2cm}X}
+\toprule
+\textbf{Category} & \textbf{Reference Behaviour} & \textbf{Tests} \\
+\midrule
 Pseudo-oracle: field-free motion & Closed-form trajectory and detector-hit comparison for $\mathbf{E}=\mathbf{0},\mathbf{B}=\mathbf{0}$. & T-FR-2 \\
 Pseudo-oracle: E-only motion & Closed-form constant-acceleration comparison for $\mathbf{B}=\mathbf{0},\mathbf{E}\neq\mathbf{0}$. & T-FR-4 \\
 Pseudo-oracle: B-only invariants & Speed conservation check under magnetic-only motion. & T-FR-3, NFR-ACC-2 \\
 Pseudo-oracle: multi-region transition & Check field-switch behaviour and post-transition invariants. & T-FR-5 \\
+Output contract: no-hit sentinel & Verify no-hit runs report $t_{\mathrm{hit}}=-1$. & T-FR-3 \\
+Output contract: hit payload & Verify hit runs report $t_{\mathrm{hit}}$ and $(x_{\mathrm{hit}},y_{\mathrm{hit}})$. & T-FR-2, T-FR-4, T-FR-5, T-FR-6 \\
 \bottomrule
 \end{tabularx}
-\caption{Input-constraint and pseudo-oracle coverage summary}
-\label{tab:input_pseudo_coverage}
+\caption{Pseudo-oracle and output-contract coverage summary}
+\label{tab:pseudo_oracle_coverage}
 \end{table}
 
 \wss{It would be nice to have a blurb here to explain why the subsections below
@@ -702,12 +884,9 @@ Initial State:
 
 Input/Condition:
 \begin{itemize}
-  \item Re-run the field-free analytic scenario from functional test T-FR-2:
-  $m = 1.0$, $q = 1.0$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(2,1)$,
-  $R_1 = [0,2]\times[-1,2]$,
-  $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$,
-  detector $x_{\mathrm{det}}=1$, $y\in[-1,2]$,
-  $t_{\text{final}}=1.0$.
+  \item Re-run the field-free detector-hit scenario from T-FR-2 exactly
+  (including detector orientation/location/length and the valid multi-region
+  geometry/topology constraints).
   \item Run the same case with three refinement levels:
   step/sampling settings $h$, $h/2$, and $h/4$.
 \end{itemize}
@@ -771,11 +950,9 @@ Initial State:
 
 Input/Condition:
 \begin{itemize}
-  \item Re-run the B-only scenario from functional test T-FR-3:
-  $m=1$, $q=1$, $(x_0,y_0)=(0,0)$, $(v_{0x},v_{0y})=(1,0)$,
-  $R_1=[-2,2]\times[-2,2]$,
-  $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,1\rangle$,
-  $t_{\text{final}}=1.0$.
+  \item Re-run the B-only no-hit scenario from T-FR-3 exactly (including
+  horizontal detector specification and valid multi-region geometry/topology
+  constraints).
   \item Repeat with refinement levels $h$, $h/2$, and $h/4$.
 \end{itemize}
 
@@ -858,10 +1035,10 @@ Initial State:
 Input/Condition:
 \begin{itemize}
   \item Systematic coverage of all input constraints is provided by the automated
-        tests T-INV-1 through T-INV-5 (see Section~\ref{sec:inputval}). This
+        tests T-INV-1 through T-INV-12 (see Section~\ref{sec:inputval}). This
         manual test focuses exclusively on the \emph{quality} of the error message
         visible to a real user.  Choose any one scenario from T-INV-1 through
-        T-INV-5 to exercise.
+        T-INV-12 to exercise.
 \end{itemize}
 
 Output/Result:
@@ -877,7 +1054,7 @@ Output/Result:
 
 How test will be performed:
 \begin{itemize}
-  \item Choose one scenario from T-INV-1 through T-INV-5.
+  \item Choose one scenario from T-INV-1 through T-INV-12.
   \item Execute the invalid-input run, inspect the error message, and record
         whether a new user could understand and correct the mistake without
         additional documentation.
@@ -979,21 +1156,22 @@ How test will be performed:
 \begin{table}[h!]
 \centering
 \renewcommand{\arraystretch}{1.15}
-\begin{tabular}{l p{0.72\textwidth}}
+\begin{tabular}{p{0.27\textwidth} p{0.65\textwidth}}
 \toprule
 \textbf{Requir.} & \textbf{Test Cases} \\
 \midrule
-R1 (inputSpec)   & T-FR-1, T-FR-2, T-FR-3, T-FR-4, T-FR-5,
-                   T-INV-1, T-INV-2, T-INV-3, T-INV-4, T-INV-5 \\
-R2 (echoInputs)  & T-FR-1 \\
-R3 (computeTraj) & T-FR-2, T-FR-3, T-FR-4, T-FR-5 \\
-R4 (detectHit)   & T-FR-2, T-FR-4 \\
-R5 (reportOutputs) & T-FR-2 \\
+\texttt{R\_inputSpec} (\texttt{inputSpec}) & T-FR-1, T-FR-2, T-FR-3, T-FR-4, T-FR-5, T-FR-6,
+                                           T-INV-1, T-INV-2, T-INV-3, T-INV-4, T-INV-5, T-INV-6,
+                                           T-INV-7, T-INV-8, T-INV-9, T-INV-10, T-INV-11, T-INV-12 \\
+\texttt{R\_echoInputs} (\texttt{echoInputs}) & T-FR-1 \\
+\texttt{R\_computeTraj} (\texttt{computeTraj}) & T-FR-2, T-FR-3, T-FR-4, T-FR-5, T-FR-6 \\
+\texttt{R\_detectHit} (\texttt{detectHit}) & T-FR-2, T-FR-3, T-FR-4, T-FR-5, T-FR-6 \\
+\texttt{R\_reportOutputs} (\texttt{reportOutputs}) & T-FR-2, T-FR-3, T-FR-4, T-FR-5, T-FR-6 \\
 \midrule
-NFR1 (Accuracy)         & NFR-ACC-1, NFR-ACC-2 \\
-NFR2 (Usability)        & NFR-USE-1, NFR-USE-2 \\
-NFR3 (Maintainability)  & NFR-MAINT-1 \\
-NFR4 (Portability)      & NFR-PORT-1 \\
+\texttt{NFR\_Accuracy} (\texttt{Accuracy}) & NFR-ACC-1, NFR-ACC-2 \\
+\texttt{NFR\_Usability} (\texttt{Usability}) & NFR-USE-1, NFR-USE-2 \\
+\texttt{NFR\_Maintainability} (\texttt{Maintainability}) & NFR-MAINT-1 \\
+\texttt{NFR\_Portability} (\texttt{Portability}) & NFR-PORT-1 \\
 \bottomrule
 \end{tabular}
 \label{Table:ReqTrace}
