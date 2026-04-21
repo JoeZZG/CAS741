@@ -217,7 +217,9 @@ solver for IM1, not the primary \progname{Trajecto} executable.
   \item Build system tests that cover all functional requirements and
   nonfunctional requirements; evidence will be shown in CI logs and the
   test-to-requirement traceability matrix.
-  \item Analyze differences between actual outputs and expected outputs, and refine the program accordingly.
+  \item Analyze differences between actual and expected outputs, compute error
+  metrics, create a defect issue for each failure, implement a fix, and rerun
+  affected tests before closing the issue.
 \end{enumerate}
 
 \wss{In this section you would also give any details of any plans for static
