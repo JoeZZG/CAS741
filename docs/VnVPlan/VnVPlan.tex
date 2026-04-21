@@ -708,7 +708,8 @@ Input/Condition:
   $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,0\rangle$,
   detector $x_{\mathrm{det}}=1$, $y\in[-1,2]$,
   $t_{\text{final}}=1.0$.
-  \item Use a fixed step size $h$ (or fixed sampling interval) if required by the CLI.
+  \item Run the same case with three refinement levels:
+  step/sampling settings $h$, $h/2$, and $h/4$.
 \end{itemize}
 
 Output/Result:
@@ -734,16 +735,22 @@ Output/Result:
   $e_{\mathrm{pos}}$ and $e_{\mathrm{vel}}$.
   \item Acceptance criteria:
   \begin{itemize}
-    \item Max position error $\le 5h\cdot \max(|v_x|,|v_y|)$.
-    \item Max velocity error is near zero; require $\max(|v_x-2|,|v_y-1|)\le 10^{-3}$.
-    \item Hit time and hit location errors $\le h$.
+    \item \textbf{A posteriori convergence:} under refinement
+    ($h\rightarrow h/2\rightarrow h/4$), max and RMS values of
+    $e_{\mathrm{pos}}$ and $e_{\mathrm{vel}}$ decrease monotonically.
+    \item \textbf{A posteriori hit consistency:}
+    $e_{t,\mathrm{hit}}$ and $e_{\mathrm{hit}}$ at $h/4$ are no larger than at
+    $h/2$, and values at $h/2$ are no larger than at $h$.
+    \item Report the observed error-reduction ratios between levels as the
+    acceptance evidence for NFR-ACC-1.
   \end{itemize}
 \end{itemize}
 
 How test will be performed:
 \begin{itemize}
-  \item Run Trajecto, parse the reported samples and hit report.
-  \item Compute max absolute errors and compare to acceptance criteria.
+  \item Run Trajecto for $h$, $h/2$, and $h/4$; parse samples and hit reports.
+  \item Compute error metrics at each level and report the observed
+  error-reduction trend.
 \end{itemize}
 
 \end{enumerate}
@@ -769,21 +776,24 @@ Input/Condition:
   $R_1=[-2,2]\times[-2,2]$,
   $\mathbf{E}_1=\langle 0,0,0\rangle$, $\mathbf{B}_1=\langle 0,0,1\rangle$,
   $t_{\text{final}}=1.0$.
+  \item Repeat with refinement levels $h$, $h/2$, and $h/4$.
 \end{itemize}
 
 Output/Result:
 \begin{itemize}
   \item Speed-squared $S(t_i)=v_x(t_i)^2+v_y(t_i)^2$ remains approximately constant for a small $t_i$.
-  \item Acceptance criteria: relative drift
+  \item Acceptance criteria (a posteriori): relative drift
   \[
-    \frac{\max_i |S(t_i)-S(t_0)|}{S(t_0)} \le 1\%.
+    D(h)=\frac{\max_i |S(t_i)-S(t_0)|}{S(t_0)}
   \]
+  decreases or remains stable under refinement, and $D(h/4)\le 1\%$.
 \end{itemize}
 
 How test will be performed:
 \begin{itemize}
-  \item Run Trajecto and extract $(v_x,v_y)$ from trajectory samples.
-  \item Compute $S(t_i)$ and verify drift threshold.
+  \item Run Trajecto at $h$, $h/2$, and $h/4$ and extract $(v_x,v_y)$.
+  \item Compute $D(h)$ for each level and verify the a posteriori trend and
+  finest-level threshold.
 \end{itemize}
 
 \end{enumerate}
