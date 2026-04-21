@@ -320,6 +320,10 @@ Output:
 \begin{itemize}
   \item The program echoes the full input specification used for the run (all numeric values and region/field/detector definitions).
   \item No input-constraint errors are reported (satisfies $m>0$, $q\neq 0$, $t_{\text{final}}>0$, valid rectangle, valid detector segment).
+  \item Numerical results are consistent with the field-free truth for this
+  scenario: at $t_{\text{final}}=1$, the reported state is
+  $(x,y,v_x,v_y)=(2,1,2,1)$ (within tolerance), and the detector summary
+  reports hit time near $0.5$ at $(1,0.5)$.
 \end{itemize}
 
 Test Case Derivation:
