@@ -1,0 +1,70 @@
+# particle mass (kg)
+1.0
+# particle charge (C)
+1.0
+# initial x-position (m)
+0.0
+# initial y-position (m)
+0.0
+# initial x-velocity (m/s)
+1.0
+# initial y-velocity (m/s)
+0.0
+# number of field regions
+2
+# number of grid columns
+2
+# region width (m)
+2.0
+# region height (m)
+4.0
+# grid origin x-coordinate (m)
+-2.0
+# grid origin y-coordinate (m)
+-2.0
+# x-electric field in region 0 (N/C)
+0.0
+# x-electric field in region 1 (N/C)
+0.0
+# x-electric field in region 2 (N/C)
+0.0
+# x-electric field in region 3 (N/C)
+0.0
+# x-electric field in region 4 (N/C)
+0.0
+# x-electric field in region 5 (N/C)
+0.0
+# y-electric field in region 0 (N/C)
+0.0
+# y-electric field in region 1 (N/C)
+0.0
+# y-electric field in region 2 (N/C)
+0.0
+# y-electric field in region 3 (N/C)
+0.0
+# y-electric field in region 4 (N/C)
+0.0
+# y-electric field in region 5 (N/C)
+0.0
+# magnetic flux density in region 0 (T)
+1.0
+# magnetic flux density in region 1 (T)
+1.0
+# magnetic flux density in region 2 (T)
+0.0
+# magnetic flux density in region 3 (T)
+0.0
+# magnetic flux density in region 4 (T)
+0.0
+# magnetic flux density in region 5 (T)
+0.0
+# detector orientation (0=vertical, 1=horizontal)
+1
+# detector line position (m)
+1.5
+# detector start coordinate (m)
+-2.0
+# detector line length (m)
+4.0
+# final simulation time (s)
+1.0
