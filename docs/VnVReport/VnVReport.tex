@@ -32,6 +32,7 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 Apr 15, 2026 & 1.0 & Initial VnV Report\\
+Apr 17, 2026 & 1.1 & Updated after code review: fixed DetectorHit interpolation and Control call order\\
 \bottomrule
 \end{tabularx}
 
@@ -102,7 +103,7 @@ T-FR-4 & test\_fr4.py & PASS &
   Comparison is limited to $x\le2$\,m where the field is active;
   beyond that point the particle leaves the grid and the analytic
   formula no longer applies.
-  Hit: $t=2.001$\,s, $x=2.002$\,m, $y=0$\,m. \\
+  Hit: $t\approx2.000$\,s, $x=2.000$\,m, $y=0$\,m (interpolated to exact detector position). \\
 T-FR-5 & test\_fr5.py & PASS &
   Particle moves through two regions: first field-free, then magnetic.
   Hit confirmed at $(0.5,\,0.0)$\,m.
@@ -127,13 +128,7 @@ Table~\ref{tab:inv-results} shows the results for T-INV-1 to T-INV-12.
 \textbf{Test} & \textbf{Input} & \textbf{Result} & \textbf{Notes} \\
 \midrule
 T-INV-1 & $m=0$ & PASS &
-  Program exits with code~1.
-  The code computes $\kappa = q/m$ before checking constraints,
-  so a \texttt{ZeroDivisionError} is raised instead of a labelled
-  \texttt{InputError}. This is a minor ordering issue in the generated
-  code: \texttt{derived\_values()} is called before
-  \texttt{input\_constraints()}. The program still aborts correctly,
-  so the safety requirement is met. The test accepts either error type. \\
+  \texttt{InputError} is raised and the program exits with code~1. \\
 T-INV-2 & $q=0$ & KNOWN GAP &
   No $q>0$ check exists in the generated code.
   The program runs with $\kappa=0$ (no Lorentz force, straight-line
@@ -288,8 +283,27 @@ implementation to compare against.
 \section{Changes Due to Testing}
 % -----------------------------------------------------------------------
 
-No changes were made to the generated source code.
-Two implementation gaps were found and documented:
+Two bugs were found and fixed in the Drasil specification (Haskell source),
+and the code was regenerated:
+\begin{itemize}
+  \item \textbf{Call order in Control.py}: \texttt{genAllInputCalls} in
+        \texttt{drasil-code} generated \texttt{derived\_values()} before
+        \texttt{input\_constraints()}, causing a \texttt{ZeroDivisionError}
+        when $m=0$ instead of the expected \texttt{InputError}.
+        Fixed by swapping the order of \texttt{genConstraintCall} and
+        \texttt{genDerivedCall} in \texttt{FunctionCalls.hs}.
+  \item \textbf{Interpolation in DetectorHit.py}: The hit position and time were
+        recorded at the ODE step after the crossing, not at the crossing itself.
+        Fixed in \texttt{ModuleDefs.hs} by adding linear interpolation: the
+        fractional step \texttt{frac} is computed, and the hit coordinate and
+        time use \texttt{(i - 1 + frac) * t\_step} and the interpolated
+        position.
+        This also required fixing an operator-precedence error in the Haskell DSL
+        expression (\texttt{\$+} and \texttt{\$*} share default fixity
+        \texttt{infixl 9}), resolved by adding explicit parentheses.
+\end{itemize}
+
+Two remaining implementation gaps were found and documented:
 \begin{itemize}
   \item \textbf{T-INV-2 ($q=0$)}: The generated \texttt{InputParameters.py}
         has no hard check for $q>0$.
